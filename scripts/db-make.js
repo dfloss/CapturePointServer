@@ -1,5 +1,5 @@
 var pg = require("pg");
-var env = process.env.NODE_ENV || 'test';
+var env = process.env.NODE_ENV || 'development';
 var dbconfig = require('../config/dbconfig.json')[env];
 
 var pgurl = "postgres://localhost:5432/postgres";
