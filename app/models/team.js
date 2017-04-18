@@ -1,4 +1,4 @@
-'use string';
+'use strict';
 module.exports = function(sequelize, DataTypes){
     var Team = sequelize.define('Team',{  
         name: {
