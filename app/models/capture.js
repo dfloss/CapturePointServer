@@ -12,18 +12,20 @@ module.exports = function(sequelize, DataTypes){
             Capture.belongsTo(models.Team);
             Capture.belongsTo(models.Game);
         },
-        //TODO: convert game to gameId
-        captureEvent: function(models,teamName, game) {
+        //TODO: remove game specification from this function
+            //All game settings should be done by time
+        captureEvent: function(models,teamName,time,game) {
             //get the current game if one is not passed
             var currentGame = game || models.Game.getCurrent();
             //look up the team if the teamName is not null
             var team = models.Team.findByName(teamName);
+            //set time if time is not provided
+            var time = time || new Date();
             //wait for team and game promises to return,
             // then return the created capture promise
             return Promise.all([currentGame,team]).then(values => {
-                console.log(team);
                 var params = {
-                    time: new Date(),
+                    time: time,
                     GameId: values[0]['id'],
                     TeamId: values[1]['id']
                 }
