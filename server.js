@@ -14,7 +14,7 @@ app.use(express.static('public'));
 
 //port settting, can be moved to config later if required
     //default to 8080 for local testing
-var port = process.env.PORT || 8080; 
+var port = process.env.SERVERPORT || 8080; 
 
 //The router for the capture point api
 var router = express.Router();
