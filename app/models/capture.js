@@ -32,11 +32,19 @@ module.exports = function(sequelize, DataTypes){
                 Capture.create(params);
             })
         },
+        getCurrent: function(){
+            return Capture.findOne({
+                where: {
+                    time: {$lt: new Date()}
+                },
+                order: [ ['start', 'DESC'] ]
+            })
+        },
         validate: function(captureParams){
             //loop through all properties passed to check validity
             for (var property in captureParams) {
                 if (captureParams.hasOwnProperty(property)) {
-                    var value = captureParams[property]
+                    var value = captureParams[property];
                     //put propertynames with their associated checks here
                     //if there are no checks just put a blank case statement with a break
                     switch (property){

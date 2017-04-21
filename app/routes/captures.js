@@ -14,13 +14,25 @@ module.exports = function(router, models, config){
                     success: true
                 });
             })
+        });
+        //Specific Captures
+    router.param("captureId",function(res,req,next){
+        models.Capture.findById(req.params.captureId).then(capture => {
+            req.capture = capture;
+            next();
         })
+    });
     router.route("/captures/:captureId")
         .patch(function(req, res){
-            models.Capture.findById()
+            
         })
         .delete(function(req, res){
-            
+            req.capture.delete().then(function(){
+                res.json({
+                    message: "capture deleted",
+                    success: true
+                })
+            })
         })
         .put(function(req, res){
             

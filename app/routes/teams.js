@@ -8,7 +8,7 @@ module.exports = function(router, models, config){
             })
         })
         .post(function(req, res, next){
-            teamparams = req.body
+            teamparams = req.body;
             models.Team.create(teamparams).then(function(){
                 res.json({
                     message: `Successfully added team ${teamparams.name}`,
@@ -40,7 +40,7 @@ module.exports = function(router, models, config){
             next();
         })
         .catch(function(err){
-            err.statuscode = 404
+            err.statuscode = 404;
             next(err);
         })
     })
@@ -51,7 +51,7 @@ module.exports = function(router, models, config){
         })
 //        .post(function(req, res){})
         .patch(function(req, res, next){
-            teamparam = req.body
+            teamparam = req.body;
 /*            try{
                 models.Team.validate(teamparam);
             }

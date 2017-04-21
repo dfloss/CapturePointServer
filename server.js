@@ -31,7 +31,7 @@ router.use(function(req, res, next) {
 });
 
 //Load all our routes, it expects: router, models, config
-require('./app/routes')(router,models,config)
+require('./app/routes')(router,models,config);
 
 // Register the capturepoint api routes to /capturepointapi
 app.use('/capturepointapi', router);

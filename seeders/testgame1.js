@@ -39,13 +39,14 @@ lastCapture = gametime;
 lastCapture.setHours(8);
 
 for(i=0;i<10;i++){
-    randMinutes = getRand(5,30);
+    randMinutes = getRand(30,90);
     nextTeam = teams[i%2].name;
     captureTime = addMinutes(lastCapture,randMinutes);
     captures.push({
         time: captureTime,
         team: nextTeam
     });
+    lastCapture=captureTime
 }
 //Run our shit
 

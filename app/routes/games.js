@@ -15,7 +15,7 @@ module.exports = function(router, models, config){
                 })    
             }).catch(function(err){
                 err.message = `Unable to add team ${gameparams.name}`;
-                err.statuscode = 400
+                err.statuscode = 400;
                 next(err);
             })
         });
