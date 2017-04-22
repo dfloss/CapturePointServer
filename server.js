@@ -12,6 +12,13 @@ app.use(bodyParser.json());
 //Setup hosting of static files located in the public folder
 app.use(express.static('public'));
 
+//Setup CORS
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 //port settting, can be moved to config later if required
     //default to 8080 for local testing
 var port = process.env.SERVERPORT || 8080; 

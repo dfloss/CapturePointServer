@@ -8,7 +8,7 @@ models.Capture.findAll({
 .then(results => {
     curTeam = results[0].Team.name;
     capTime = results[0].time;
-    score = {};
+    totalScore = {};
     for(i=1;i<results.length;i++){
         result = results[i];
         if (result.Team.name !== curTeam){
@@ -16,9 +16,11 @@ models.Capture.findAll({
             mscore = Math.floor(score / 1000 / 60);
             console.log(score);
             console.log(`Team: ${curTeam} scored ${mscore} minutes`);
+            totalScore[curTeam] = (totalScore[curTeam] || 0 ) + score
             capTime = result.time;
             curTeam = result.Team.name;
         }
     }
+    console.log(totalScore);
 })
  

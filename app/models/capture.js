@@ -37,7 +37,7 @@ module.exports = function(sequelize, DataTypes){
                 where: {
                     time: {$lt: new Date()}
                 },
-                order: [ ['start', 'DESC'] ]
+                order: [ ['time', 'DESC'] ]
             })
         },
         validate: function(captureParams){

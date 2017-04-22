@@ -12,7 +12,25 @@ module.exports = function(router, models, config){
 
     //score calculator
     router.get('/score', function(req, res){
-
+        models.Capture.findAll({
+            include: [models.Game, models.Team],
+            order: [ ['time', 'ASC'] ]
+        })
+        .then(results => {
+            curTeam = results[0].Team.name;
+            capTime = results[0].time;
+            totalScore = {};
+            for(i=1;i<results.length;i++){
+                result = results[i];
+                if (result.Team.name !== curTeam){
+                    score = result.time - capTime;
+                    totalScore[curTeam] = (totalScore[curTeam] || 0 ) + score
+                    capTime = result.time;
+                    curTeam = result.Team.name;
+                }
+            }
+            res.json(totalScore);
+        })
     });
     //status
     router.get('/status', function(req, res){
@@ -26,10 +44,13 @@ module.exports = function(router, models, config){
     });
     //capture endpoint for clients
     router.post('/capture', function(req, res){
-        models.Capture.captureEvent(models,req.team).then(function(){
+        models.Capture.captureEvent(models,req.body.team).then(function(){
             res.json({
                 success: true
             })
+        })
+        .catch(function(err){
+            throw err;
         })
     })
 }
