@@ -10,12 +10,16 @@
 <body>
   
     <div id="admin">
-        <score v-bind:score="score"></score>
-        <p>loading: {{loading}}</p>
-        <p>view: {{view}}</p>
+      <div class="controls">
+        <p>loading: {{loading}} || view: {{view}}</p>
         <button v-on:click="getScore">getScore</button>
         <button v-on:click="getCaptures">getCaptures</button>
         <button v-on:click="getGames">getGames</button>
+      </div>
+      <div class="view" v-if="isScore">
+        <score v-bind:score="score"></score>
+      </div>
+        <h2>Results</h2>
         <p>{{result}}</p>
     </div>
   <!-- <script src="node_modules/vue/dist/vue.js"></script> -->

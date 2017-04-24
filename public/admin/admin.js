@@ -11,6 +11,11 @@ var admin = new Vue({
             captures: null
         }
     },
+    computed:{
+        isScore: function(){return this.view == "score" ? true:false;},
+        isCaptures: function(){return this.view == "captures" ? true:false;},
+        isGames: function(){return this.view == "games" ? true:false;}
+    },
     methods: {
         apiRequest: function(target,method,callback,body){
             //set "View Model" (vm) as our parent app, allows xmlhttp functions to change our app variables
@@ -58,6 +63,7 @@ var admin = new Vue({
         getGames: function(){
             target = this.apiurl + "/games";
             method = "Get";
+            this.view = "games";
             this.apiRequest(target,method);
         }
     }
