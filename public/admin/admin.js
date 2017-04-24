@@ -4,7 +4,12 @@ var admin = new Vue({
         apiurl: "http://" + window.location.hostname + ":" + window.location.port + "/capturepointapi",
         loading: false,
         result: "",
-        view: null
+        view: null,
+        score: {
+            totalScores: null,
+            gameScores: null,
+            captures: null
+        }
     },
     methods: {
         apiRequest: function(target,method,callback,body){
@@ -37,31 +42,22 @@ var admin = new Vue({
             target = this.apiurl + "/score";
             method = "GET";
             this.view = "score";
-
             callback = function(response){
-                let rawScore = JSON.parse(response);
-                var score = {};
-                for (var key in rawScore) {
-                    if (rawScore.hasOwnProperty(key)) {
-                        var element = rawScore[key];
-                        let seconds = Math.floor((element/1000)%60);
-                        let minutes = Math.floor((element/(1000*60)) % 60);
-                        let hours = Math.floor((element/(1000*60*60)) % 24);
-                        score[key] = {
-                            hours: hours,
-                            minutes: minutes,
-                            seconds: seconds
-                        }
-                    }
-                }
+                score = JSON.parse(response);
+                vm.score = score;
                 vm.result = score;
             }
-            this.apiRequest(target,method,callback);
+            this.apiRequest(target,method, callback);
         },
         getCaptures: function(){
             target = this.apiurl + "/captures";
             method = "Get";
             this.view = "captures";
+            this.apiRequest(target,method);
+        },
+        getGames: function(){
+            target = this.apiurl + "/games";
+            method = "Get";
             this.apiRequest(target,method);
         }
     }

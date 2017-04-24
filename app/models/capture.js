@@ -10,27 +10,20 @@ module.exports = function(sequelize, DataTypes){
     classMethods: {
         associate: function(models) {
             Capture.belongsTo(models.Team);
-            Capture.belongsTo(models.Game);
         },
         //TODO: remove game specification from this function
             //All game settings should be done by time
-        captureEvent: function(models,teamName,time,game) {
-            //get the current game if one is not passed
-            var currentGame = game || models.Game.getCurrent();
-            //look up the team if the teamName is not null
-            var team = models.Team.findByName(teamName);
+        captureEvent: function(models,teamName,time) {
             //set time if time is not provided
             var time = time || new Date();
-            //wait for team and game promises to return,
-            // then return the created capture promise
-            return Promise.all([currentGame,team]).then(values => {
+            //return the promise to look up the team if the teamName is not null
+           return models.Team.findByName(teamName).then(value => {
                 var params = {
                     time: time,
-                    GameId: values[0]['id'],
-                    TeamId: values[1]['id']
+                    TeamId: value['id']
                 }
                 Capture.create(params);
-            })
+            });
         },
         getCurrent: function(){
             return Capture.findOne({

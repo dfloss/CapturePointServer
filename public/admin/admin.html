@@ -8,18 +8,20 @@
     <link rel="stylesheet" href="admin.css">
 </head>
 <body>
-
+  
     <div id="admin">
-        <p>{{result}}</p>
+        <score v-bind:score="score"></score>
         <p>loading: {{loading}}</p>
         <p>view: {{view}}</p>
-        <p>hosturl: {{hosturl}}</p>
         <button v-on:click="getScore">getScore</button>
         <button v-on:click="getCaptures">getCaptures</button>
+        <button v-on:click="getGames">getGames</button>
+        <p>{{result}}</p>
     </div>
   <!-- <script src="node_modules/vue/dist/vue.js"></script> -->
   <!-- <script src="node_modules/vue-resource/dist/vue-resource.js"></script> -->
   <script src="https://unpkg.com/vue"></script>
+  <script src="score.js"></script>
   <script src="admin.js"></script>
 </body>
 </html>

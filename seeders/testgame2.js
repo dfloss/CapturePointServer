@@ -13,19 +13,23 @@ var getRand = function(min,max){
 }
 
 //Generate our times
-
-//Set game time to 8:00 at the begining of the day
-//Set game end to the end of the night.
 var gametime = new Date();
 var gameend = new Date();
-gameend.setHours(23);
+gameend.setHours(12);
 gametime.setHours(8);
 gametime.setMinutes(0);
-var game = {
-    name: "game1",
-    start: gametime,
-    end: gameend
-}
+//Set game time to 8:00 at the begining of the day
+//Set game end to the end of the night.
+var games = [{
+        name: "game1",
+        start: new Date().setHours(8,0,0,0),
+        end: new Date().setHours(12,0,0,0)
+    }]
+games.push({
+        name: "game2",
+        start: new Date().setHours(13,0,0,0),
+        end: new Date().setHours(17,0,0,0)
+    });
 
 //Setup two teams
 teams = [
@@ -37,17 +41,18 @@ teams = [
     }
 ]
 
-//Generate 10 capture times, start at game start
+//Generate 20 capture times, start at game start
 captures = []
+gametime.setHours(8);
 lastCapture = gametime;
 
-for(i=0;i<10;i++){
-    randMinutes = getRand(30,60);
-    nextTeam = teams[i%2].name;
+for(i=0;i<20;i++){
+    randMinutes = getRand(15,30);
+    nextTeam = i%2 + 1;
     captureTime = addMinutes(lastCapture,randMinutes);
     captures.push({
         time: captureTime,
-        team: nextTeam
+        TeamId: nextTeam
     });
     lastCapture=captureTime
 }
@@ -56,18 +61,14 @@ for(i=0;i<10;i++){
 
 //reset DB, all seeders should do this
 models.sequelize.sync({force: true}).then(function(){
-    var gamePromise = models.Game.create(game);
+    var gamePromise = models.Game.bulkCreate(games);
     var teamPromises = [
         models.Team.create(teams[0]),
         models.Team.create(teams[1])
     ]
     Promise.all([gamePromise,teamPromises]).then(function(){
-        var promises = []
-        for (capture of captures){
-            promises.push(models.Capture.captureEvent(models,capture.team,capture.time));
-        }
-        Promise.all(promises).then(function(){
-            return;
-        })
+        models.Capture.bulkCreate(captures).then(function(){
+            console.log("alldone");
+        });
     });
 });

@@ -10,5 +10,5 @@ client.connect(function(err){
 
     client.query(`CREATE DATABASE ${dbconfig["database"]}`);
     client.query(`CREATE USER ${dbconfig["username"]} WITH PASSWORD '${dbconfig["password"]}'`);
-    client.query(`GRANT ALL PRIVILEGES ON ${dbconfig["database"]} TO ${dbconfig["username"]}`);
+    client.query(`GRANT ALL PRIVILEGES ON DATABASE "${dbconfig["database"]}" TO ${dbconfig["username"]}`);
 })
