@@ -5,6 +5,10 @@ module.exports = function(sequelize, DataTypes){
             type: DataTypes.DATE,
             DefaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
             allowNull: false
+        },
+        deviceMac: {
+            type: DataTypes.STRING,
+            DefaultValue: null
         }
     },{
     classMethods: {
@@ -13,14 +17,15 @@ module.exports = function(sequelize, DataTypes){
         },
         //TODO: remove game specification from this function
             //All game settings should be done by time
-        captureEvent: function(models,teamName,time) {
+        captureEvent: function(models,teamName,time,mac) {
             //set time if time is not provided
             var time = time || new Date();
             //return the promise to look up the team if the teamName is not null
            return models.Team.findByName(teamName).then(value => {
                 var params = {
                     time: time,
-                    TeamId: value['id']
+                    TeamId: value['id'],
+                    deviceMac: mac
                 }
                 Capture.create(params);
             });

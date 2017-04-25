@@ -172,8 +172,8 @@ module.exports = function(router, models, config){
         });
     });
     //capture endpoint for clients
-    router.post('/capture', function(req, res){
-        models.Capture.captureEvent(models,req.body.team).then(function(){
+    router.post('/capturetest', function(req, res){
+        models.Capture.captureEvent(models,req.body.team,req.body.mac).then(function(){
             res.json({
                 success: true
             })

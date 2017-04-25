@@ -3,6 +3,7 @@ var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
 var models = require('./app/models');
 var config = require('./config/config.json')
+var arp = require('node-arp')
 
 // configure app to use bodyParser, This could be a performance hit when hosting static files
     //might look to move it to  the router level
@@ -32,8 +33,7 @@ var router = express.Router();
 /// middleware to use for all requests
 router.use(function(req, res, next) {
     // real request logging goes here
-    console.log('request recieved');
-    
+
     //Middleware calls go here
     //RESERVERFORMIDDLEWAREFUCKINGDOIT: AUTH, VALIDAITON, MEMES
     
@@ -42,6 +42,10 @@ router.use(function(req, res, next) {
 
 //Load all our routes, it expects: router, models, config
 require('./app/routes')(router,models,config);
+
+//Load client routes with mac logging arp lookups
+//Good luck debugging
+require('./app/clientroutes')(router,models,arp,config);
 
 // Register the capturepoint api routes to /capturepointapi
 app.use('/capturepointapi', router);

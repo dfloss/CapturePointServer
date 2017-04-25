@@ -11,6 +11,25 @@ var addMinutes = function(date, minutes){
 var getRand = function(min,max){
     return Math.random() * (max - min + 1) + min;
 }
+//mactable for seeding players
+var macs = [
+    "00-00-00-00-00-00",
+    "11-11-11-11-11-11",
+    "22-22-22-22-22-22",
+    "33-33-33-33-33-33",
+    "44-44-44-44-44-44",
+    "55-55-55-55-55-55",
+    "66-66-66-66-66-66",
+    "77-77-77-77-77-77",
+    "88-88-88-88-88-88",
+    "99-99-99-99-99-99",
+    "aa-aa-aa-aa-aa-aa",
+    "bb-bb-bb-bb-bb-bb",
+    "cc-cc-cc-cc-cc-cc",
+    "dd-dd-dd-dd-dd-dd",
+    "ee-ee-ee-ee-ee-ee",
+    "ff-ff-ff-ff-ff-ff"
+]
 
 //Generate our times
 
@@ -43,31 +62,30 @@ lastCapture = gametime;
 
 for(i=0;i<10;i++){
     randMinutes = getRand(30,60);
+    macnum = Math.floor(getRand(0,15));
+    mac = macs[macnum];
     nextTeam = teams[i%2].name;
     captureTime = addMinutes(lastCapture,randMinutes);
     captures.push({
         time: captureTime,
-        team: nextTeam
+        team: nextTeam,
+        deviceMac: mac
     });
-    lastCapture=captureTime
+    lastCapture=captureTime;
 }
 //Run our shit
 
 
 //reset DB, all seeders should do this
 models.sequelize.sync({force: true}).then(function(){
-    var gamePromise = models.Game.create(game);
+    var gamePromise = models.Game.bulkCreate(games);
     var teamPromises = [
         models.Team.create(teams[0]),
         models.Team.create(teams[1])
     ]
     Promise.all([gamePromise,teamPromises]).then(function(){
-        var promises = []
-        for (capture of captures){
-            promises.push(models.Capture.captureEvent(models,capture.team,capture.time));
-        }
-        Promise.all(promises).then(function(){
-            return;
-        })
+        models.Capture.bulkCreate(captures).then(function(){
+            console.log("alldone");
+        });
     });
 });

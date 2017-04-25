@@ -11,7 +11,25 @@ var addMinutes = function(date, minutes){
 var getRand = function(min,max){
     return Math.random() * (max - min + 1) + min;
 }
-
+//MAC table for generation of random macs
+var macs = [
+    "00-00-00-00-00-00",
+    "11-11-11-11-11-11",
+    "22-22-22-22-22-22",
+    "33-33-33-33-33-33",
+    "44-44-44-44-44-44",
+    "55-55-55-55-55-55",
+    "66-66-66-66-66-66",
+    "77-77-77-77-77-77",
+    "88-88-88-88-88-88",
+    "99-99-99-99-99-99",
+    "aa-aa-aa-aa-aa-aa",
+    "bb-bb-bb-bb-bb-bb",
+    "cc-cc-cc-cc-cc-cc",
+    "dd-dd-dd-dd-dd-dd",
+    "ee-ee-ee-ee-ee-ee",
+    "ff-ff-ff-ff-ff-ff"
+]
 //Generate our times
 var gametime = new Date();
 var gameend = new Date();
@@ -48,16 +66,17 @@ lastCapture = gametime;
 
 for(i=0;i<20;i++){
     randMinutes = getRand(15,30);
+    macnum = Math.floor(getRand(0,15));
+    mac = macs[macnum];
     nextTeam = i%2 + 1;
     captureTime = addMinutes(lastCapture,randMinutes);
     captures.push({
         time: captureTime,
-        TeamId: nextTeam
+        TeamId: nextTeam,
+        deviceMac: mac
     });
-    lastCapture=captureTime
+    lastCapture=captureTime;
 }
-//Run our shit
-
 
 //reset DB, all seeders should do this
 models.sequelize.sync({force: true}).then(function(){

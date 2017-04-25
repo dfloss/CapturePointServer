@@ -11,10 +11,12 @@
   
     <div id="admin">
       <div class="controls">
-        <p>loading: {{loading}} || view: {{view}}</p>
+        <p>loading: {{loading}} || view: {{view}}  || LoadTime: <span v-show="doneLoading">{{loadTime}}</span></p>
         <button v-on:click="getScore">getScore</button>
         <button v-on:click="getCaptures">getCaptures</button>
         <button v-on:click="getGames">getGames</button>
+        <button v-on:click="sendCapture">sendCapture (ARP)</button>
+        <button v-on:click="sendCaptureNoArp">sendCapture (No ARP)</button>
       </div>
       <div class="view" v-if="isScore">
         <score v-bind:score="score"></score>
