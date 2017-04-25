@@ -9,6 +9,9 @@ var config = require('./config/config.json')
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+//Setup hosting of our front end script files
+//because I'm garbage that didn't make a new project
+app.use('/scripts/vue', express.static('node_modules/vue/dist'));
 //Setup hosting of static files located in the public folder
 app.use(express.static('public'));
 
