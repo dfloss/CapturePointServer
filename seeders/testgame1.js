@@ -78,7 +78,7 @@ for(i=0;i<10;i++){
 
 //reset DB, all seeders should do this
 models.sequelize.sync({force: true}).then(function(){
-    var gamePromise = models.Game.bulkCreate(games);
+    var gamePromise = models.Game.bulkCreate(game);
     var teamPromises = [
         models.Team.create(teams[0]),
         models.Team.create(teams[1])

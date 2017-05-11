@@ -164,11 +164,18 @@ module.exports = function(router, models, config){
     //status
     router.get('/status', function(req, res){
         capturePromise = models.Capture.getCurrent().then(capture =>{
-            models.Team.findById(capture.TeamId).then(team => {
-                res.json({
-                    team: team.name
+            if (capture.TeamId == null){
+                res.jsoin({
+                    team: null
+                })
+            }
+            else{
+                models.Team.findById(capture.TeamId).then(team => {
+                    res.json({
+                        team: team.name
+                    });
                 });
-            });
+            }
         });
     });
     //capture endpoint for clients
