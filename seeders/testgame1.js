@@ -86,6 +86,7 @@ models.sequelize.sync({force: true}).then(function(){
     Promise.all([gamePromise,teamPromises]).then(function(){
         models.Capture.bulkCreate(captures).then(function(){
             console.log("alldone");
+            process.exit();
         });
     });
 });
