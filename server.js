@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var models = require('./app/models');
 var config = require('./config/config.json')
 var arp = require('node-arp')
+var gpio = require('./app/gpio/hardware.js');
 
 // configure app to use bodyParser, This could be a performance hit when hosting static files
     //might look to move it to  the router level
@@ -68,3 +69,4 @@ models.sequelize.sync(options).then(function(){
     app.listen(port);
 });
 console.log('Listening on: ' + port);
+gpio.start();

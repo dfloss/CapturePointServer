@@ -164,8 +164,8 @@ module.exports = function(router, models, config){
     //status
     router.get('/status', function(req, res){
         capturePromise = models.Capture.getCurrent().then(capture =>{
-            if (capture.TeamId == null){
-                res.jsoin({
+            if (capture == null){
+                res.json({
                     team: null
                 })
             }
