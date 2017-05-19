@@ -12,6 +12,7 @@ console.log('running GPIO');
 //Pin 6 capture LED G
 //pin 13 capture LED B
 var LEDpower = 21;
+var LEDstatus = 20;
 var LEDshutOut = 6;
 var LEDshutRead = 5;
 var LEDR = 19;
@@ -22,8 +23,9 @@ module.exports = {
    start: function() {
 	    this.setLow();
         this.output(LEDpower, 1);
+		this.output(LEDstatus, 0);
         this.shutdownButton();
-		this.capture(1);
+		this.capture(1, 1);
    },
    stop: function(){
         this.output(LEDpower, 0);
@@ -44,10 +46,13 @@ module.exports = {
 		
    },
    shutdownButton: function(){
+		var that = this;
         this.output(LEDshutOut, 1);
         this.input(LEDshutRead);
         function pollpn(pin){
             if (rpio.read(pin)){
+				that.output(LEDpower, 0);
+				that.output(LEDstatus, 1);
 				exec('/usr/bin/sudo /sbin/shutdown -h now', function(error){
 					console.log(error);
 				});
@@ -95,39 +100,43 @@ module.exports = {
 		this.output(LEDG, 0);
 		this.output(LEDB, 0);
 	},
-	capture: function(iter){
+	capture: function(iteration, type, iter = 0){
+		//type: 1 = rainbow, 2 = police
 		var that = this;
 		var time = 1000;	//time for each color, currently 1s
-		var iterations = 1;  //Set to determine length of capture flashing (x6 time);
 		var curr = iter;
-		setTimeout(function(){ that.red();
-			setTimeout(function(){ that.purple();
+		switch(type){
+			case 1:
+				setTimeout(function(){ that.red();
+				setTimeout(function(){ that.purple();
 				setTimeout(function(){ that.blue();
-					setTimeout(function(){ that.turqoise();
-						setTimeout(function(){ that.green();
-							setTimeout(function(){ that.yellow();
-								setTimeout(function(){ that.black();
-									curr++
-									if (curr < iterations){
-										that.capture(curr);
-									}
-								}, time);
-							}, time);
-						}, time);
-					}, time);
-				}, time);
-			}, time);
-		}, time);
-		
-		//for (i = 0; i < loops; i++){
-			//this.output(13, 1);
-			//this.output(6, 1);
-			//this.output(13, 0);
-			//this.output(5, 1);
-			//this.output(6, 0);
-			//this.output(13, 1);
-			//this.output(5, 0);
-		//}		
-		//this.output(13, 0);
+				setTimeout(function(){ that.turqoise();
+				setTimeout(function(){ that.green();
+				setTimeout(function(){ that.yellow();
+					curr++
+					if (curr < iteration){
+						that.capture(iteration, type, curr);
+					}
+					} else{
+						setTimeout(function(){ that.black();},time);
+					}	
+				}, time);}, time);}, time);}, time);}, time);}, time);
+				break;
+			case 2:
+				setTimeout(function(){ that.red();
+				setTimeout(function(){ that.blue();
+				setTimeout(function(){ that.black();
+					curr++
+					if (curr < iteration){
+						that.capture(iteration, type, curr);
+					} else{
+						setTimeout(function(){ that.black();},time);
+					}					
+				}, time);}, time);}, time);
+				break;
+			default:
+				console.log('how did you even get here?');
+				break;
+		}
 	}
 };
