@@ -12,10 +12,10 @@ console.log('running GPIO');
 //Pin 6 capture LED G
 //pin 13 capture LED B
 var LEDpower = 21;
-var LEDshutOut = 26;
-var LEDshutRead = 19;
-var LEDR = 5;
-var LEDG = 6;
+var LEDshutOut = 6;
+var LEDshutRead = 5;
+var LEDR = 19;
+var LEDG = 26;
 var LEDB = 13;
 
 module.exports = {
@@ -23,6 +23,7 @@ module.exports = {
 	    this.setLow();
         this.output(LEDpower, 1);
         this.shutdownButton();
+		this.capture(1);
    },
    stop: function(){
         this.output(LEDpower, 0);
@@ -54,19 +55,58 @@ module.exports = {
           }
         rpio.poll(LEDshutRead, pollpn);
     },
+	red: function(){
+		this.output(LEDR, 1);
+		this.output(LEDG, 0);
+		this.output(LEDB, 0);
+	},
+	purple: function(){
+		this.output(LEDR, 1);
+		this.output(LEDG, 0);
+		this.output(LEDB, 1);		
+	},
+	blue: function(){
+		this.output(LEDR, 0);
+		this.output(LEDG, 0);
+		this.output(LEDB, 1);
+	},
+	turqoise: function(){
+		this.output(LEDR, 0);
+		this.output(LEDG, 1);
+		this.output(LEDB, 1);
+	},
+	green: function(){
+		this.output(LEDR, 0);
+		this.output(LEDG, 1);
+		this.output(LEDB, 0);
+	},
+	yellow: function(){
+		this.output(LEDR, 1);
+		this.output(LEDG, 1);
+		this.output(LEDB, 0);
+	},
+	white: function(){
+		this.output(LEDR, 1);
+		this.output(LEDG, 1);
+		this.output(LEDB, 1);
+	},
+	black: function(){
+		this.output(LEDR, 0);
+		this.output(LEDG, 0);
+		this.output(LEDB, 0);
+	},
 	capture: function(iter){
 		var that = this;
 		var time = 1000;	//time for each color, currently 1s
 		var iterations = 1;  //Set to determine length of capture flashing (x6 time);
 		var curr = iter;
-		that.output(LEDB, 1);
-		setTimeout(function(){ that.output(LEDG, 1);
-			setTimeout(function(){ that.output(LEDB, 0);
-				setTimeout(function(){ that.output(LEDR, 1);
-					setTimeout(function(){ that.output(LEDG, 0);
-						setTimeout(function(){ that.output(LEDB, 1);
-							setTimeout(function(){ that.output(LEDR, 0);
-								setTimeout(function(){ that.output(LEDB, 0);
+		setTimeout(function(){ that.red();
+			setTimeout(function(){ that.purple();
+				setTimeout(function(){ that.blue();
+					setTimeout(function(){ that.turqoise();
+						setTimeout(function(){ that.green();
+							setTimeout(function(){ that.yellow();
+								setTimeout(function(){ that.black();
 									curr++
 									if (curr < iterations){
 										that.capture(curr);
