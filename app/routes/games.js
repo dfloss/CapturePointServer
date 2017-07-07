@@ -1,4 +1,4 @@
-module.exports = function(router, models, config){
+module.exports = (router, models, config) => {
     
     router.route("/games")
         .get(function(req, res, next){

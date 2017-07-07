@@ -12,8 +12,7 @@ module.exports = function(sequelize, DataTypes){
             allowNull: false
         },
         end: {
-            type: DataTypes.DATE,
-            allowNull: false,
+            type: DataTypes.DATE
         }
     },{
     classMethods: {

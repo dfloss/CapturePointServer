@@ -1,5 +1,5 @@
 module.exports = function (models, config){
-    var games = {
+    var game = {
     }
-    return games
+    return game
 }
