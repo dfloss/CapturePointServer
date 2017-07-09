@@ -16,7 +16,8 @@ module.exports = function(sequelize, DataTypes){
             type: DataTypes.DATE
         },
         persistTeam:{
-            type: DataTypes.BOOLEAN
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
         }
     },{
     classMethods: {
