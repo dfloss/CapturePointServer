@@ -4,6 +4,7 @@ var config = require("../config/config.json");
 var models = require("../app/models")
 
 var initDate = new Date();
+var gamePath = "../app/controller/game"
 describe("Game creation",function(){
     it("Can create a game with a start and an end with a valid timespan",function(){
         //set expected game parameters
@@ -14,38 +15,53 @@ describe("Game creation",function(){
         }
         //setup mocks, stubs and spies
             //mocking game model create function and setting expectations
-        var modelsMock = sinon.mock(models.game);
-        createMock.expects("create").once().calledWith(expectedGame);
+        var gameMock = sinon.mock(models.game);
+        gameMock.expects("create").once().calledWith(expectedGame);
         //Import the game controller with the mocked models
-        var game = require("../app/controller/game")(modelsMock,config);
-        game.create("testGame",gameStart,gameEnd);
+        var gameController = require(gamePath)(models,config);
+        gameController.create("testGame",gameStart,gameEnd);
         //verify
-        createMock.verify();
+        gameMock.verify();
+        gameMock.restore();
     });
-    it("Can create an open ended game that starts after the current time",function(){
+    it("Can create an open ended game with a specific start time",function(){
         //set expected game parameters
         var expectedGame = {
             name: "testGame",
             gameStart: initDate,
-            gameEnd: initDate.setHours(initDate.getHours()+4)
+            gameEnd: null
         }
         //setup mocks, stubs and spies
             //mocking game model create function and setting expectations
         var modelsMock = sinon.mock(models.game);
-        createMock.expects("create").once().calledWith(expectedGame);
+        modelsMock.expects("create").once().calledWith(expectedGame);
         //Import the game controller with the mocked models
-        var game = require("../app/controller/game")(modelsMock,config);
+        var game = require(gamePath)(models,config);
         game.create(expectedGame.name,expectedGame.gameStart,expectedGame.gameEnd);
         //verify
-        createMock.verify();
+        modelsMock.verify();
+        modelsMock.restore();
     });
     it("Can immediately make an open ended game at the current time",function(){
-        expect(true).to.equal(false);
+        //expect(true).to.equal(false);
+        var modelsMock = sinon.mock(models.game);
+        modelsMock.expects("create").once();
+        var game = require(gamePath)
+        game.start();
     });
     it("Prevents making a game that ends before it starts",function(){
-        expect(true).to.equal(false);
+        //expect(true).to.equal(false);
+        var badGame = {
+            name: "badGame",
+            gameStart: initDate.setHours(initDate.getHours()+4),
+            gameEnd: initDate
+        }
+        var game = require(gamePath)(models,config);
+        game.create(badGame).then(results => {
+
+        });
     });
-    it("Prevents making a new game while an open ended game is running",function(){
+    it("Prevents making a new game that conflicts with other games",function(){
         expect(true).to.equal(false);
     });
     it("Can set starting team owner for a game",function(){
