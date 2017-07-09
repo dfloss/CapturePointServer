@@ -1,4 +1,3 @@
-'use strict';
 //please ref https://github.com/jperkin/node-rpio
 var rpio = require('rpio');
 var exec = require('child_process').exec;
@@ -138,5 +137,26 @@ var LEDcontroller = {
 				console.log('how did you even get here?');
 				break;
 		}
-	}
 };
+
+module.exports = function(controller, config){
+    controller.events.on("boot", function(data){
+
+
+
+    });
+    controller.events.on("shutdown", function(data){
+
+
+    });
+    controller.events.on("capturing", function(data){
+
+
+
+    });
+    controller.events.on("captured", function(data){
+
+
+
+    });
+}
