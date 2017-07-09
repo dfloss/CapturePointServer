@@ -33,8 +33,8 @@ var router = express.Router();
 
 /// middleware to use for all requests
 router.use(function(req, res, next) {
-    if (timeSet && (process.env.NODE_ENV == "production" || process.env.NODE_ENV == "test")){
-        //SetTime stuff
+    if (!timeSet && (process.env.NODE_ENV == "production" || process.env.NODE_ENV == "test")){
+        
     }
     // real request logging goes here
 
