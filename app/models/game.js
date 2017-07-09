@@ -35,7 +35,7 @@ module.exports = function(sequelize, DataTypes){
             })
         },
         getConflicts: function(start, end){
-            if (end === null){
+            if (end == null){
                 var conflictSearch = {
                     end: {$gt: start}
                 }

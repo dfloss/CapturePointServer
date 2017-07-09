@@ -1,4 +1,4 @@
-module.exports = function (models, config){
+module.exports = function (events, models, config){
     var game = {
     }
     return game
