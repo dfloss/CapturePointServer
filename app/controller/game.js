@@ -1,15 +1,11 @@
 module.exports = function (events, models, config){
     var game = {
-<<<<<<< HEAD
-        create: (name,start,end,teamId) =>{
-=======
         start: (name,start,end = null,teamId = null) =>{
             if (name == null || start == null){
                 var error = new Error("name and start must have non null values");
                 error.code = "EINVALIDPARAM"
                 throw error
             }
->>>>>>> 330a7fb6a20b0c011404ec525fe7c70d3da00abc
             conflicts = models.Game.getConflicts(starttime,endTime);
             if (conflicts == null){
                 var game = {
@@ -18,11 +14,7 @@ module.exports = function (events, models, config){
                     end: end,
                     teamId: teamId 
                 }
-<<<<<<< HEAD
-                return models.Game.create(game);
-=======
                return models.Game.create(game);
->>>>>>> 330a7fb6a20b0c011404ec525fe7c70d3da00abc
             }
             else{
                 return new Promise(resolve => {
