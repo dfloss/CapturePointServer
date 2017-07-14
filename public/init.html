@@ -1,0 +1,10 @@
+<p>init.html is loaded!</p>
+
+<script>
+    var time = new Date();
+    var oReq = new XMLHttpRequest();
+    oReq.open("Post", "http://127.0.0.1:8080/capturepointapi/init");
+    oReq.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    var params = "time="+time.toString()
+    oReq.send(params);
+</script>

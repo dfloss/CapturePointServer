@@ -11,6 +11,17 @@ var arp = require('node-arp')
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+//application level middleware
+app.use((req, res, next) => {
+    if (!(timeSet)){
+        res.sendFile('./public/init.html', {root: __dirname});
+        timeSet=true;
+    }
+    else{
+        next();
+    }
+});
+
 //Setup hosting of our front end script files
 //because I'm garbage that didn't make a new project
 app.use('/scripts/vue', express.static('node_modules/vue/dist'));
@@ -28,10 +39,11 @@ app.use(function(req, res, next) {
     //default to 8080 for local testing
 var port = process.env.SERVERPORT || 8080; 
 
+var timeSet = false;
 //The router for the capture point api
 var router = express.Router();
 
-/// middleware to use for all requests
+/// middleware to use for all requests to API
 router.use(function(req, res, next) {
     if (!timeSet && (process.env.NODE_ENV == "production" || process.env.NODE_ENV == "test")){
         
