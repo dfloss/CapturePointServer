@@ -1,10 +1,19 @@
-<p>init.html is loaded!</p>
+<p>Updating time</p>
 
 <script>
-    var time = new Date();
+    var date = new Date,
+        time = [date.getMonth()+1,
+               date.getDate(),
+               date.getFullYear()].join('/')+' '+
+              [date.getHours(),
+               date.getMinutes(),
+               date.getSeconds()].join(':');
+
     var oReq = new XMLHttpRequest();
-    oReq.open("Post", "http://127.0.0.1:8080/capturepointapi/init");
+    oReq.open("Post", "http://" + self.location.host + "/capturepointapi/init");
     oReq.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     var params = "time="+time.toString()
     oReq.send(params);
+    while(oReq.readyState != 1){console.log(oReq.readyState);}
+    window.open(location.href);
 </script>
