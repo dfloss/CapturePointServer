@@ -34,20 +34,20 @@ module.exports = function(sequelize, DataTypes){
                 order: [ ['start', 'DESC'] ]
             })
         },
-        getConflicts: function(start, end){
+        getConflicts: function(start, end = null, id = null){
+            var conflictSearch = {};
+            if (id != null){
+                conflictSearch.id = {$not: id};
+            }
             if (end == null){
-                var conflictSearch = {
-                    end: {$gt: start}
-                }
+                conflictSearch.end =  {$gt: start};
             }
             else{
-                var conflictSearch = {
-                    start: {$lt: end},
-                    $or: [
-                        {end: {$gt: start}},
-                        {end: null}
-                    ]
-                }
+                conflictSearch.start = {$lt: end};
+                conflictSearch.$or = [
+                    {end: {$gt: start}},
+                    {end: null}
+                ];
             }
             return Game.findAll({where: conflictSearch});
         }

@@ -1,47 +1,68 @@
 module.exports = function (events, models, config){
     var game = {
-        start: (name,start,end = null,teamId = null) =>{
-            if (name == null || start == null){
-                var error = new Error("name and start must have non null values");
-                error.code = "EINVALIDPARAM"
-                throw error
-            }
-            conflicts = models.Game.getConflicts(starttime,endTime);
-            if (conflicts == null){
-                var game = {
-                    name: name,
-                    start: starttime,
-                    end: end,
-                    teamId: teamId 
-                }
-               return models.Game.create(game);
-            }
-            else{
-                return new Promise(resolve => {
-                    resolve({error:true,conflicts: conflicts});
+        create: (game) =>{
+            if (game.name == null || game.start == null || game.name == ""){
+                return new Promise((resolve,reject)=>{
+                    var error = new Error("name and start must have non null values");
+                    error.code = "EINVALIDPARAM"
+                    reject(error);
                 });
             }
+            else if (game.start > game.end && game.end != null){
+                return new Promise((resolve,reject)=>{
+                    var error = new Error("game must end after it starts");
+                    error.code = "EINVALIDPARAM"
+                    reject(error);
+                });
+            }
+
+            //return our initial promise becuase promise chains!
+            return models.Game.getConflicts(game.start,game.end).then((conflicts) => {
+                if (conflicts == null){
+                    return models.Game.create(game);
+                }
+                else{
+                    return new Promise((resolve,reject)=>{
+                        var error = new Error("Game times conflict with other games");
+                        error.code = "ECONFLICT";
+                        error.conflicts = conflicts;
+                        reject(error);
+                    });
+                }
+            });
         },
         update: (game)=>{
             gameId = game.id;
             var result = delete game.id;
-            return models.Game.update({game},{where: {id: gameId}});
+
+            return models.Game.getConflicts(game.start,game.end,gameId).then((conflicts)=>{              
+                if (conflicts == null){
+                    console.log(conflicts);
+                    return models.Game.update(game,{where: {id: gameId}});
+                }
+                else{
+                    return new Promise((resolve,reject)=>{
+                        var error = new Error("Game times conflict with other games");
+                        error.code = "ECONFLICT";
+                        error.conflicts = conflicts;
+                        reject(error);
+                    });
+                }
+            });
         },
         delete: (game) =>{
             return models.Game.findById(game.id).then(gameRecord =>{
                 return gameRecord.destroy();
             });
         },
-        get: (filter) =>{
-            if (filter == null){
-                return models.Game.findAll();
-            }
-            else{
-                return models.Game.findAll(filter);
-            }
-        },
-        getById: (id) =>{
+        get: (id) =>{
             return models.Game.findById(id);
+        },
+        getAll: () =>{
+            return models.Game.findAll();
+        },
+        getCurrent: () =>{
+            return models.Game.getCurrent();
         }
     }
     return game

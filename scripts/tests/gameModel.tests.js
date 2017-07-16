@@ -1,7 +1,7 @@
 var models = require("../../app/models");
 var time = new Date();
 time = time.setMonth(1);
-models.Game.getConflicts(time,null).then(value =>{
+models.Game.getConflicts(time,null,1).then(value =>{
     if (value == null){
         console.log("weow");
     }

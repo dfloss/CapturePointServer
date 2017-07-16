@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 
 //application level middleware
 app.use((req, res, next) => {
-    if (!(timeSet)){
+    if (!(timeSet) && process.env.NODE_ENV == "production"){
         res.sendFile('./public/init.html', {root: __dirname});
         timeSet=true;
     }
