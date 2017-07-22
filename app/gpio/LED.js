@@ -115,7 +115,6 @@ var LEDcontroller = {
 					curr++
 					if (curr < iteration){
 						that.capture(iteration, type, curr);
-					}
 					} else{
 						setTimeout(function(){ that.black();},time);
 					}	
@@ -137,6 +136,7 @@ var LEDcontroller = {
 				console.log('how did you even get here?');
 				break;
 		}
+	}
 };
 
 module.exports = function(controller, config){
