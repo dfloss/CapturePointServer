@@ -1,0 +1,116 @@
+ADMIN:
+    '/captures'
+      get: 
+        Action: Gets all captures
+        Input: null
+      post:
+        Action: Creates a new capture (admin);
+        Input: {
+            time: {datetime} //time that capture occured
+            TeamId: {int} //ID of the team that captured
+        }
+    /captures/:id
+      get:
+        Action: Returns capture with id {:id}
+        Input: null
+      patch:
+        Action: Updates capture with id {:id} with the object passed as the post body
+        Input: {
+          time: {datetime}
+          TeamId: {int}
+        }
+      delete:
+        Action: Deletes the capture with id {:id}
+        Input: null
+    /teams
+      get:
+        Action: Returns all teams
+        Input: null
+      post:
+        Action: adds a team
+        Input: {
+          teamName: {string}
+          simpleColor: One Of ["Red","Yellow","Blue","Orange","Purple","Green"] //color of team for devices with simple colors
+          webColor: valid hex color //color of team for web sites and devices 
+          active: true or false //if the team is currently active
+        }
+    /teams/:id
+      get:
+        Action: returns team with id :id
+        Input: null
+      patch:
+        Action: updates team with the object from the request body
+        Input: {
+          teamName: {string}
+          simpleColor: One Of ["Red","Yellow","Blue","Orange","Purple","Green"]
+          webColor: valid hex color
+          active: true or false
+        }
+      delete:
+        Action: deletes team with id :id
+        Input: null
+    /games
+      get:
+        Action: Returns all games
+        Input: null
+      post:
+        Action: creates new games
+        Input:{
+          name: {string} //name of the games
+          start: {datetime} //time that game starts
+          end: {datetime} //time that game ends
+          TeamId: {int, ForeignKey} //The id of the team that begins the game with control of the point.
+          persistTeam: {boolean} //Determines if team that owned the point from the previous game should retain control of the point.
+        }
+    /games/:id
+      get:
+        Action: returns game with id :id
+        Input: null
+      patch: 
+        Action: updates game with id :id
+        Input: {
+          name: {string} //name of the games
+          start: {datetime} //time that game starts
+          end: {datetime} //time that game ends
+          TeamId: {int, ForeignKey} //The id of the team that begins the game with control of the point.
+          persistTeam: {boolean} //Determines if team that owned the point from the previous game should retain control of the point.
+        }
+      delete:
+        Action: deletes game with id :id
+CLIENT:
+    /capture
+      post:
+        Action: creates a capture record and triggers a capture event for the specified team
+        Input: {
+          TeamId: {int,ForeignKey}
+        }
+    /startCapuring
+      post:
+        Action: Sets the device to capturing mode for the specified team
+        Input: {
+          TeamId:
+        }
+    /stopCapturing
+      post:
+        Action: Stops the current capture
+        Input: null
+    /status
+      get:
+        Action: Returns the current device status
+        Output: {
+          currentCapture: { //the most recent capture (can be used to derive how long the enemy team has had the point)
+            id: {int,PrimaryKey}
+            time: {datetime} //time most recent capture occured
+            deviceId: {string} //Id of the device that had the last capture
+            TeamId: {int,ForeignKey} //Id of the team that captured it last
+          }
+          currentGame: {
+            id: {int,PrimaryKey}
+            name: {string}
+            start: {datetime}
+            end: {datetime}
+          }
+          isCapturing: {boolean} //will be true if the capture point is currently being captured
+          capturingTeamId: {int,ForeignKey} //Id of team capturing, if no capturing will be set to null
+        }
+DONE!

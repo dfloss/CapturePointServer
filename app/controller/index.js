@@ -95,6 +95,7 @@ module.exports = function(models, config){
     }
     controller.stopCapturing = function(){
         controller.isCapturing = false;
+        controller.capturingTeamId = null;
         clearTimeout(controller.capturingTimeout);
         controller.events.emit("endCapturing");
     },
