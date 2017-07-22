@@ -1,3 +1,14 @@
 {
-    "arpThrashing": true
+  "development": {
+    "timeSet": true,
+    "capturingTimeout": 20000 
+  },
+  "test": {
+    "timeSet": false,
+    "capturingTimeout": 20000
+  },
+  "production": {
+    "timeSet": false,
+    "capturingTimeout": 20000
+  }
 }

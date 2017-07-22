@@ -1,13 +1,15 @@
 //Seeder for testing a single day, 2 team game with 10 random captures
 
 var models = require('../app/models');
-var config = require('../config/config.json')
+var config = require('../config/config.json');
+var controller = require('../app/controller');
+
 
 //Helper function for Javascript's shitty date object
 var addMinutes = function(date, minutes){
     return new Date(date.getTime() + minutes*60000);
 }
-//Help Function for JAvascripts shitty random function
+//Help Function for Javascripts shitty random function
 var getRand = function(min,max){
     return Math.random() * (max - min + 1) + min;
 }
@@ -33,43 +35,45 @@ var macs = [
 
 //Generate our times
 
-//Set game time to 8:00 at the begining of the day
-//Set game end to the end of the night.
-var gametime = new Date();
-var gameend = new Date();
-gameend.setHours(23);
-gametime.setHours(8);
-gametime.setMinutes(0);
-var game = {
-    name: "game1",
-    start: gametime,
-    end: gameend
+//Set Game to start 4 hours previous to current
+  //and end 4 hours after current time
+gameStart = addMinutes((new Date()),-240);
+gameEnd = addMinutes((new Date()),240);
+game = {
+    name: "currentGame",
+    start: gameStart,
+    end: gameEnd
 }
+
 
 //Setup two teams
 teams = [
     {
-        name: "team1"
+        name: "team1",
+        simpleColor: "Green",
+        webColor: 'm4a5444'
     },
     {
-        name: "team2"
+        name: "team2",
+        simpleColor: "Orange",
+        webColor: 'b49d80'
     }
 ]
 
 //Generate 10 capture times, start at game start
-captures = []
-lastCapture = gametime;
+captures = [];
+lastCapture = gameStart;
 
 for(i=0;i<10;i++){
     randMinutes = getRand(30,60);
     macnum = Math.floor(getRand(0,15));
     mac = macs[macnum];
-    nextTeam = teams[i%2].name;
+    nextTeam = (i%2)+1;
     captureTime = addMinutes(lastCapture,randMinutes);
     captures.push({
         time: captureTime,
-        team: nextTeam,
-        deviceMac: mac
+        TeamId: nextTeam,
+        deviceId: mac
     });
     lastCapture=captureTime;
 }
@@ -78,7 +82,7 @@ for(i=0;i<10;i++){
 
 //reset DB, all seeders should do this
 models.sequelize.sync({force: true}).then(function(){
-    var gamePromise = models.Game.bulkCreate(game);
+    var gamePromise = models.Game.create(game);
     var teamPromises = [
         models.Team.create(teams[0]),
         models.Team.create(teams[1])

@@ -1,11 +1,13 @@
+var env        = process.env.NODE_ENV || 'development';
 var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
 var models = require('./app/models');
-var config = require('./config/config.json')
-var arp = require('node-arp')
+var config = require('./config/config.json')[env];
+var arp = require('node-arp');
 //var gpio = require('./app/gpio/hardware.js');
-
+var controller= require('./app/controller')(models,config);
+var hardware = require('./app/gpio')(controller,models);
 // configure app to use bodyParser, This could be a performance hit when hosting static files
     //might look to move it to  the router level
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -13,7 +15,7 @@ app.use(bodyParser.json());
 
 //application level middleware
 app.use((req, res, next) => {
-    if (!(timeSet) && process.env.NODE_ENV == "production"){
+    if (!(timeSet) && env != "development"){
         res.sendFile('./public/init.html', {root: __dirname});
         timeSet=true;
     }
@@ -23,7 +25,6 @@ app.use((req, res, next) => {
 });
 
 //Setup hosting of our front end script files
-//because I'm garbage that didn't make a new project
 app.use('/scripts/vue', express.static('node_modules/vue/dist'));
 //Setup hosting of static files located in the public folder
 app.use(express.static('public'));
@@ -45,9 +46,6 @@ var router = express.Router();
 
 /// middleware to use for all requests to API
 router.use(function(req, res, next) {
-    if (!timeSet && (process.env.NODE_ENV == "production" || process.env.NODE_ENV == "test")){
-        
-    }
     // real request logging goes here
 
     //Middleware calls go here
@@ -61,7 +59,7 @@ require('./app/routes')(router,models,config);
 
 //Load client routes with mac logging arp lookups
 //Good luck debugging
-require('./app/clientroutes')(router,models,arp,config);
+require('./app/clientroutes')(router,controller,config);
 
 // Register the capturepoint api routes to /capturepointapi
 app.use('/capturepointapi', router);
@@ -69,6 +67,7 @@ app.use('/capturepointapi', router);
 //Error handler defined last
 app.use(function(err, req, res, next){
     res.status(err.statuscode || 500);
+    console.log(err);
     res.json({
         message: err.message,
         error: err,

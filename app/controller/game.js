@@ -1,5 +1,5 @@
 module.exports = function (events, models, config){
-    var game = {
+    var Game = {
         create: (game) =>{
             if (game.name == null || game.start == null || game.name == ""){
                 return new Promise((resolve,reject)=>{
@@ -37,7 +37,6 @@ module.exports = function (events, models, config){
 
             return models.Game.getConflicts(game.start,game.end,gameId).then((conflicts)=>{              
                 if (conflicts == null){
-                    console.log(conflicts);
                     return models.Game.update(game,{where: {id: gameId}});
                 }
                 else{
@@ -65,5 +64,5 @@ module.exports = function (events, models, config){
             return models.Game.getCurrent();
         }
     }
-    return game
+    return Game
 }

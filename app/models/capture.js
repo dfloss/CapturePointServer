@@ -6,7 +6,7 @@ module.exports = function(sequelize, DataTypes){
             DefaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
             allowNull: false
         },
-        deviceMac: {
+        deviceId: {
             type: DataTypes.STRING,
             DefaultValue: null
         }

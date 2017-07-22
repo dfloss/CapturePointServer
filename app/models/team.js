@@ -10,6 +10,14 @@ module.exports = function(sequelize, DataTypes){
             type: DataTypes.BOOLEAN,
             defaultValue: true,
             allowNull: false
+        },
+        simpleColor: {
+            type: DataTypes.STRING,
+            defaultValue: null
+        },
+        webColor: {
+            type: DataTypes.STRING,
+            defaultValue: null
         }
     },{
     classMethods: {
@@ -21,28 +29,6 @@ module.exports = function(sequelize, DataTypes){
                     name: teamName
                 }
             });
-        },
-        //testing this as a way to validate update parameters 
-        //since sequelize doesn't do that
-        validate: function(teamparams){
-            //loop through all properties passed to check validity
-            for (var property in teamparams) {
-                if (team.hasOwnProperty(property)) {
-                    var value = teamparams[property]
-                    //put propertynames with their associated checks here
-                    //if there are no checks just put a blank case statement with a break
-                    switch (property){
-                    case "name":
-                        //null and undefinied names are not allowed
-                        if (value == null){throw "Team name is not allowed to be null";}
-                        break;
-                    case "active":
-                        break;
-                    default:
-                        throw `invalid property name ${property}`;
-                    }
-                }
-            }
         }
     }
   });

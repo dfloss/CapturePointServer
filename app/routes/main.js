@@ -160,24 +160,6 @@ module.exports = function(router, models, config){
             res.json(result);
         }).catch(function(err){console.log(err);});
     });
-
-    //status
-    router.get('/status', function(req, res){
-        capturePromise = models.Capture.getCurrent().then(capture =>{
-            if (capture == null){
-                res.json({
-                    team: null
-                })
-            }
-            else{
-                models.Team.findById(capture.TeamId).then(team => {
-                    res.json({
-                        team: team.name
-                    });
-                });
-            }
-        });
-    });
     //capture endpoint for clients
     router.post('/capturetest', function(req, res){
         models.Capture.captureEvent(models,req.body.team,req.body.mac).then(function(){

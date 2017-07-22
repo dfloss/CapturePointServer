@@ -1,4 +1,5 @@
-module.exports = function(router, models, arp, config){
-    require('./capture')(router, models, arp, config);
-    require('./init')(router,models,arp,config);
+module.exports = function(router,controller,config){
+    require('./capture')(router,controller,config);
+    require('./init')(router,controller,config);
+    require('./status')(router,controller,config);
 }

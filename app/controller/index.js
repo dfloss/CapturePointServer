@@ -1,12 +1,123 @@
 module.exports = function(models, config){
+    var arp = require('node-arp');
+    const {promisify} = require("util");
+    var getMacPromise = promisify(arp.getMAC);
+    var crypto = require('crypto');
+    var idHasher = crypto.createHash('sha1');
     const eventClass = require('events');
     class Events extends eventClass {}
     const events = new Events();
     var controller = {
+        //model controllers
+        events: events,
         Game: require("./game.js")(events,models,config),
         Team: require("./team.js")(events,models,config),
-        //capture: require("./capture.js")(events,models,config),
-        events: events
+        //Capture: require("./capture.js")(events,models,config),
+        //controller variables
+        timeSet: config.timeSet,
+        isCapturing: false,
+        capturingTeamId: null,
+        capturingTimer: null,
+        //controller functions
     }
-    return controller
+    controller.Game = require("./game.js")(controller.events,models,config);
+    controller.Team = require("./team.js")(controller.events,models,config);
+    controller.Capture = require("./capture.js")(controller.events,models,config);
+    controller.getStatus = function(){
+        //replace with controller.Capture.getCurrent();
+        currentCaptureProm = controller.Capture.getCurrent();
+        currentGameProm = controller.Game.getCurrent();
+        return Promise.all([currentCaptureProm,currentGameProm]).then((values)=>{
+            currentCapture = values[0];
+            currentGame = values[1];
+            var status;
+            //if a game isn't happening return a message that there is no game
+            if (currentGame == null){
+                return models.Game.getNext().then((nextGame)=>{
+                    return {
+                        message: "No games occuring", //whatever we want if there is no game
+                        values: values,
+                        nextGame: nextGame,
+                        date: new Date()
+                    }
+                });
+            }
+            //if there is a currentGame but no capture or a capture before the game started
+            // return the currentGame's settings as the latest capture
+            else if(currentCapture == null || currentCapture.time < currentGame.start){
+                status = {
+                    currentCapture: {
+                        time: currentGame.start,
+                        teamId: currentGame.teamId
+                    },
+                    currentGame: currentGame
+                }
+            }
+            //all other circumstances should result in directly returning game and capture
+            else{
+                status = {
+                    currentCapture: currentCapture,
+                    currentGame: currentGame
+                }
+            }
+            status.isCapturing = controller.isCapturing;
+            status.capturingTeamId = controller.capturingTeamId;
+            return status;
+        });
+    }
+    controller.getDeviceId = function(req){
+        var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
+        ip = ip.substring(7,20);
+        return getMacPromise(ip).then((mac)=>{
+            if (err) {
+                console.log(err);
+                return Promise.resolve(null);
+            }
+            idHasher.update(mac);
+            id = sha1hash.digest('base64');
+            return Promise.resolve(id);
+        }).catch((error)=>{
+            Promise.reject(error);
+        });
+    }
+    //capturing block... maybe make it it's own controller or put it in Capture
+    controller.startCapturing = function(teamId){
+        return controller.Team.get(teamId).then((team)=>{
+            controller.isCapturing = true;
+            controller.capturingTeamId = team.id;
+            controller.events.emit("capturing",team);
+            controller.capturingTimer = setTimeout(controller.stopCapturing,config.capturingTimeout);
+        }).catch((error)=>{
+            var error = new Error(`invalid team id ${teamId}`);
+            error.code = "ENOTFOUND";
+            return Promise.reject(error);
+        });
+    }
+    controller.stopCapturing = function(){
+        controller.isCapturing = false;
+        clearTimeout(controller.capturingTimeout);
+        controller.events.emit("endCapturing");
+    },
+    controller.continueCapturing = function(){
+        clearTimeout(controller.capturingTimeout);
+        controller.capturingTimer = setTimeout(controller.stopCapturing,config.capturingTimeout);
+    }
+    controller.capture =  function(TeamId,deviceId){
+            return controller.Team.get(TeamId).then((team)=>{
+                capture = {
+                    time: new Date(),
+                    deviceId: deviceId,
+                    TeamId: team.id
+                }
+                return controller.Capture.create(capture).then(()=>{
+                    controller.stopCapturing();
+                    controller.events.emit("capture",{team: team,deviceId: deviceId});
+                });
+            }).catch((error)=>{
+                var error = new Error(`invalid team id ${teamId}`);
+                erorr.code = "ENOTFOUND";
+                return Promise.reject(error);
+            });
+    }
+    return controller;
 }

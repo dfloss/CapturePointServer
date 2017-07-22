@@ -1,21 +1,51 @@
-module.exports = function(router, models, arp, config){
-    
-    router.post('/capture', function(req, res){
-            var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
-            ip = ip.substring(7,20);
-            arp.getMAC(ip, function(err, mac) {
-                if (err) {
-                    mac=null;
-                }
-                models.Capture.captureEvent(models,req.body.team,null,mac).then(function(){
-                    res.json({
-                        success: true
-                    })
+module.exports = function(router, controller, config){
+    //route for client sending a successful capture
+    router.post('/capture', (req, res, next)=>{
+        controller.getDeviceId(req).then((deviceId)=>{
+            controller.capture(req.body.TeamId,req.deviceId).then(()=>{
+                res.json({
+                    success: true
                 })
-                .catch(function(err){
-                    throw err;
-                })
-                console.log(mac);
+            })
+            .catch((error)=>{
+                next(error);
             });
-    })
+        });
+    });
+    //route for capture attempt starting
+      //will need some kind of validation but skipping it for proof of concept
+    router.post('/startcapturing',(req, res, next)=>{
+        controller.startCapturing(req.body.teamId).then(()=>{
+            res.json({
+                success: true
+            });
+        })
+        .catch((error)=>{
+            next(error);
+        });
+    });
+    //route for stopping capture attemps
+      //will need some kind of validation but skipping it for proof of concept
+    router.post('/stopcapturing',(req, res, next)=>{
+        contoller.stopCapturing().then(()=>{
+            res.json({
+                success: true
+            });
+        })
+        .catch((error)=>{
+            next(error);
+        });
+    });
+    //route for stopping capture attemps
+      //will need some kind of validation but skipping it for proof of concept
+    router.post('/continuecapturing',(req, res, next)=>{
+        contoller.stopCapturing().then(()=>{
+            res.json({
+                success: true
+            });
+        })
+        .catch((error)=>{
+            next(error);
+        });
+    });
 }

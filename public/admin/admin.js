@@ -7,6 +7,9 @@ var admin = new Vue({
         loadfinish: 0,
         result: "",
         view: null,
+        http: axios.create({
+            baseURL: "http://" + window.location.hostname + ":" + window.location.port + "/capturepointapi",
+        }),
         score: {
             totalScores: null,
             gameScores: null,
@@ -19,6 +22,14 @@ var admin = new Vue({
         isGames: function(){return this.view == "games" ? true:false;},
         doneLoading: function(){return !(this.loading);},
         loadTime: function(){return (this.loadfinish) - this.loadstart;}
+    },
+    created: function(){
+        var vm = this;
+        this.http.interceptors.response.use(function(response){
+            vm.loadfinish = performance.now();
+            vm.Loading = false;
+            return(response);
+        })
     },
     methods: {
         apiRequest: function(target,method,callback,body){
@@ -51,17 +62,44 @@ var admin = new Vue({
             this.loadstart = performance.now();
             this.loading = true;
         },
+        apiAxios: function(target,method,callback,data){
+            this.loadstart = performance.now();
+            this.http({
+                method: method,
+                url: target,
+                data: data
+            }).then(callback);
+            /*
+            switch(method){
+                case "get":
+                    this.http.get(target).then(callback);
+                    break;
+                case "post":
+                    this.http.post(target,data).then(callback);
+                    break;
+                case "patch":
+                    this.http.patch(target,data).then(callback);
+                    break;
+                case "put":
+                    this.http.put(target,data).then(callback);
+                    break;
+                case "delete":
+                    this.http.delete(target,data).then(callback);
+                    break;
+            }
+            */
+        },
         getScore: function(){
             var vm = this;
             target = this.apiurl + "/score";
             method = "GET";
             this.view = "score";
             callback = function(response){
-                score = JSON.parse(response);
+                score = response.data
                 vm.score = score;
-                vm.result = score;
+                vm.result = response;
             }
-            this.apiRequest(target,method, callback);
+            this.apiAxios(target,method, callback);
         },
         getCaptures: function(){
             target = this.apiurl + "/captures";

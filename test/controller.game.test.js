@@ -17,7 +17,7 @@ function getMocks(isConflict){
         findByIdStub: sandbox.stub(models.Game,"findById"),
         getCurrentStub: sandbox.stub(models.Game,"getCurrent"),
         updateStub: sandbox.stub(models.Game,"update"),
-        controller: require(gamePath)(models,config),
+        controller: require(gamePath)(models,config)
     }
     mocks.controllerCreateSpy = sandbox.spy(mocks.controller.Game,"create"),
     mocks.controllerUpdateSpy = sandbox.spy(mocks.controller.Game,"update")

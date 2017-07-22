@@ -73,7 +73,7 @@ for(i=0;i<20;i++){
     captures.push({
         time: captureTime,
         TeamId: nextTeam,
-        deviceMac: mac
+        deviceId: mac
     });
     lastCapture=captureTime;
 }

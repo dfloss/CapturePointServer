@@ -50,6 +50,15 @@ module.exports = function(sequelize, DataTypes){
                 ];
             }
             return Game.findAll({where: conflictSearch});
+        },
+        getNext: ()=>{
+            var now = new Date();
+            return Game.findOne({
+                where: {
+                    start: {$gt: now}
+                },
+                order: ['start']
+            })
         }
     }
   });
