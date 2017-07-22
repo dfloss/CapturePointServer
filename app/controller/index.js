@@ -77,7 +77,8 @@ module.exports = function(models, config){
             id = sha1hash.digest('base64');
             return Promise.resolve(id);
         }).catch((error)=>{
-            Promise.reject(error);
+            console.log(String(error));
+            return Promise.resolve(null);
         });
     }
     //capturing block... maybe make it it's own controller or put it in Capture
