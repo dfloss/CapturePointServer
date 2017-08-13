@@ -26,7 +26,7 @@ function getMocks(isConflict){
           .callsFake(()=>{return Promise.resolve({name:"conflict game",start: startDate, end: endDate, teamId: null})});
     }
     else{
-        mocks.conflictStub = sandbox.stub(models.Game,"getConflicts").callsFake(()=>{return Promise.resolve(null)})
+        mocks.conflictStub = sandbox.stub(models.Game,"getConflicts").callsFake(()=>{return Promise.resolve([])})
     }
     return mocks;
 }

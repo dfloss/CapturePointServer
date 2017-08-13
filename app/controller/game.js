@@ -15,10 +15,9 @@ module.exports = function (events, models, config){
                     reject(error);
                 });
             }
-
             //return our initial promise becuase promise chains!
             return models.Game.getConflicts(game.start,game.end).then((conflicts) => {
-                if (conflicts == null){
+                if (conflicts == null || conflicts.length == 0){
                     return models.Game.create(game);
                 }
                 else{
@@ -36,7 +35,7 @@ module.exports = function (events, models, config){
             var result = delete game.id;
 
             return models.Game.getConflicts(game.start,game.end,gameId).then((conflicts)=>{              
-                if (conflicts == null){
+                if (conflicts == null || conflicts.length == 0){
                     return models.Game.update(game,{where: {id: gameId}});
                 }
                 else{

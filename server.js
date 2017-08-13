@@ -55,7 +55,7 @@ router.use(function(req, res, next) {
 });
 
 //Load all our routes, it expects: router, models, config
-require('./app/routes')(router,models,config);
+require('./app/routes')(router,models,config,controller);
 
 //Load client routes with mac logging arp lookups
 //Good luck debugging
@@ -69,6 +69,7 @@ app.use(function(err, req, res, next){
     res.status(err.statuscode || 500);
     console.log(err);
     res.json({
+        result: err.result,
         message: err.message,
         error: err,
         success: false

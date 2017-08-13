@@ -7,13 +7,16 @@ module.exports = function(router, models, config){
             });
         })
         .post(function(req, res){
-            models.Capture.captureEvent(models, req.body.teamName, req.body.gameId)
+            models.Capture.create(req.body)
             .then(value => {
                 res.json({
-                    mesage: 'capture successful',
+                    mesage: 'capture successfully created',
                     success: true
                 });
             })
+            .catch(err =>{
+                next(err);
+            });
         });
         //Specific Captures
     router.param("captureId",function(res,req,next){

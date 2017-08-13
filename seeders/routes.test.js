@@ -1,9 +1,7 @@
-//Seeder for testing a single day, 2 team game with 10 random captures
-
-var models = require('../app/models');
-var config = require('../config/config.json');
-var controller = require('../app/controller');
-
+var axios = require("axios");
+var http = axios.create({
+    baseURL: 'http://127.0.0.1:8080/capturepointapi'
+});
 
 //Helper function for Javascript's shitty date object
 var addMinutes = function(date, minutes){
@@ -45,6 +43,11 @@ game = {
     end: gameEnd
 }
 
+var gamePromise = http({
+    method: "POST",
+    url: "/games",
+    data: game
+})
 
 //Setup two teams
 teams = [
@@ -58,6 +61,19 @@ teams = [
         simpleColor: "Orange",
         webColor: 'b49d80'
     }
+]
+
+teamPromise = [
+    http({
+        url: "/teams",
+        method: "POST",
+        data: teams[0]
+    }),
+    http({
+        url: "/teams",
+        method: "POST",
+        data: teams[1]
+    })
 ]
 
 //Generate 10 capture times, start at game start
@@ -78,17 +94,23 @@ for(i=0;i<10;i++){
     lastCapture=captureTime;
 }
 
-//reset DB, all seeders should do this
-models.sequelize.sync({force: true}).then(function(){
-    var gamePromise = models.Game.create(game);
-    var teamPromises = [
-        models.Team.create(teams[0]),
-        models.Team.create(teams[1])
-    ]
-    Promise.all([gamePromise,teamPromises]).then(function(){
-        models.Capture.bulkCreate(captures).then(function(){
-            console.log("alldone");
-            process.exit();
-        });
+
+capturePromises = [];
+captures.forEach(function(capture) {
+    capturePromises.push(
+        http({
+            method: "POST",
+            url: "/captures",
+            data: capture
+        })
+    )
+}, this);
+
+Promise.all([gamePromise,teamPromise]).then(()=>{
+    console.log("Starting: capture");
+    Promise.all(capturePromises).then(()=>{
+        console.log("alldone!");
+        process.exit();
     });
 });
+
