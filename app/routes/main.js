@@ -9,7 +9,6 @@ module.exports = function(router, models, config){
             object: object
         });
     })
-
     //score calculator
     router.get('/score', function(req, res){
         var capturesPromise = models.Capture.findAll({
@@ -160,15 +159,4 @@ module.exports = function(router, models, config){
             res.json(result);
         }).catch(function(err){console.log(err);});
     });
-    //capture endpoint for clients
-    router.post('/capturetest', function(req, res){
-        models.Capture.captureEvent(models,req.body.team,req.body.mac).then(function(){
-            res.json({
-                success: true
-            })
-        })
-        .catch(function(err){
-            throw err;
-        })
-    })
 }

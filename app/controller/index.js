@@ -77,7 +77,7 @@ module.exports = function(models, config){
             id = sha1hash.digest('base64');
             return Promise.resolve(id);
         }).catch((error)=>{
-            console.log(String(error));
+            console.log(error);
             return Promise.resolve(null);
         });
     }

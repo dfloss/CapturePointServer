@@ -14,11 +14,11 @@ var admin = new Vue({
             totalScores: null,
             gameScores: null,
             captures: null
-        }
+        },
+        apiData: null
     },
     computed:{
-        isScore: function(){return this.view == "score" ? true:false;},
-        isCaptures: function(){return this.view == "captures" ? true:false;},
+        isLoaded: function(){return (this.view == "score" || this.view == "captures") ? true:false;},
         isGames: function(){return this.view == "games" ? true:false;},
         doneLoading: function(){return !(this.loading);},
         loadTime: function(){return (this.loadfinish) - this.loadstart;}
@@ -69,61 +69,48 @@ var admin = new Vue({
                 url: target,
                 data: data
             }).then(callback);
-            /*
-            switch(method){
-                case "get":
-                    this.http.get(target).then(callback);
-                    break;
-                case "post":
-                    this.http.post(target,data).then(callback);
-                    break;
-                case "patch":
-                    this.http.patch(target,data).then(callback);
-                    break;
-                case "put":
-                    this.http.put(target,data).then(callback);
-                    break;
-                case "delete":
-                    this.http.delete(target,data).then(callback);
-                    break;
-            }
-            */
         },
         getScore: function(){
-            var vm = this;
+            vm = this;
             target = this.apiurl + "/score";
             method = "GET";
-            this.view = "score";
             callback = function(response){
-                score = response.data
-                vm.score = score;
+                vm.apiData = response.data;
+                //vm.score = response.data;
                 vm.result = response;
-            }
+                vm.view = "score";
+            };
             this.apiAxios(target,method, callback);
         },
         getCaptures: function(){
+            vm = this;
             target = this.apiurl + "/captures";
             method = "Get";
-            this.view = "captures";
-            this.apiRequest(target,method);
+            callback = (response) =>{
+                vm.apiData = response.data;
+                vm.result = response;
+                vm.view = "captures";
+            }
+            this.apiAxios(target,method,callback);
         },
         getGames: function(){
             target = this.apiurl + "/games";
             method = "Get";
-            this.view = "games";
-            this.apiRequest(target,method);
+            callback = (response)=>{
+                vm.apiData = response.data;
+                vm.result = response;
+                vm.view = "games";
+            }
+            this.apiAxios(target,method,callback);
         },
         sendCapture: function(){
             target = this.apiurl + "/capture";
             method = "Post";
-            body = {team:"team2"};
-            this.apiRequest(target,method,null,body);
-        },
-        sendCaptureNoArp: function(){
-            target = this.apiurl + "/capturetest";
-            method = "Post";
-            body = {team:"team2"};
-            this.apiRequest(target,method,null,body);
+            body = {TeamId:2};
+            callback = (response)=>{
+                vm.result = response;
+            }
+            this.apiAxios(target,method,callback,body);
         }
     }
 })

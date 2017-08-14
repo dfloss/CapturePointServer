@@ -1,0 +1,29 @@
+body {
+  font-family: Helvetica Neue, Arial, sans-serif;
+  font-size: 14px;
+  color: #444;
+}
+div.captures{
+  overflow-x: auto;
+}
+div.captures table{
+ /* border: 1px solid black;*/
+  border-collapse: collapse;
+}
+div.captures th {
+  text-align: center;
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+}
+div.captures tr,td {
+  padding: 15px;
+  text-align: center;
+}
+div.captures tr:nth-child(even) {
+  background-color: #9E9E9E
+}
+div.captures tr:hover {
+  background-color: #000000;
+  color: white;
+}

@@ -18,16 +18,16 @@ Vue.component('team-score',{
 
 Vue.component('score',{
             name: "score",
-            props: ['score'],
+            props: ['data'],
             template: `
                 <div class="score">
                 <h2>Total Score</h2>
                     <div class="totalscore">
-                        <team-score v-for="teamscore of score.totalScores" :key="teamscore" v-bind:teamscore="teamscore" v-bind:grandTotal="score.grandTotal"></team-score>
+                        <team-score v-for="teamscore of data.totalScores" :key="teamscore" v-bind:teamscore="teamscore" v-bind:grandTotal="data.grandTotal"></team-score>
                     </div>
                 <h2>Game Scores</h2>
                     <div class="gamescores">
-                        <template v-for="gamescore of score.gameScores">
+                        <template v-for="gamescore of data.gameScores">
                         <p>{{gamescore.game}}</p>
                         <team-score v-for="teamscore of gamescore.scores" :key="teamscore" v-bind:teamscore="teamscore" v-bind:grandTotal="gamescore.total"></team-score>
                         </template>

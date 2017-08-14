@@ -6,28 +6,36 @@
 
   <!-- CSS -->
     <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
-  
     <div id="admin">
+      <p>loading: {{loading}} || view: {{view}}  || LoadTime: <span v-show="doneLoading">{{loadTime}}</span></p>
       <div class="controls">
-        <p>loading: {{loading}} || view: {{view}}  || LoadTime: <span v-show="doneLoading">{{loadTime}}</span></p>
+          <p><flat-pickr v-model="date" :config="dateconfig"></flat-pickr></p>
         <button v-on:click="getScore">getScore</button>
         <button v-on:click="getCaptures">getCaptures</button>
         <button v-on:click="getGames">getGames</button>
-        <button v-on:click="sendCapture">sendCapture (ARP)</button>
-        <button v-on:click="sendCaptureNoArp">sendCapture (No ARP)</button>
+        <button v-on:click="sendCapture">sendCapture</button>
       </div>
-      <div class="view" v-if="isScore">
-        <score v-bind:score="score"></score>
+      <hr>
+      <div class="view" v-if="isLoaded">
+        <keep-alive>
+          <component :is="view" :data="apiData"></component>
+        </keep-alive>
       </div>
         <h2>Results</h2>
         <p>{{result}}</p>
     </div>
   <script src="../scripts/vue/vue.js"></script>
-<!--  <script src="https://unpkg.com/vue"></script> -->
- <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://unpkg.com/flatpickr"></script>
+  <script src="https://unpkg.com/vue-flatpickr-component"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+      Vue.component('flat-pickr',VueFlatpickr.default);
+  </script>
   <script src="score.js"></script>
+  <script src="captures.js"></script>
   <script src="admin.js"></script>
 </body>
 </html>
