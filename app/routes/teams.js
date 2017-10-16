@@ -34,7 +34,7 @@ module.exports = function(router, models, config){
         });*/
   //Team Param
     router.param('team',function(req, res, next){
-        models.Team.findByName(req.params.team).then(function(team){
+        models.Team.findById(req.params.team).then(function(team){
             req.team = team;
             if (team == null){throw {message: `Unable to find team ${req.params.team}`}};
             next();
@@ -66,6 +66,10 @@ module.exports = function(router, models, config){
                     success: true
                 })
             })
+            .catch((err) =>{
+                err.code = 'ECONFLICT'
+                next(err);
+            });
         })
         .delete(function(req, res, next){
             req.team.destroy().then(function(){

@@ -14,13 +14,14 @@ module.exports = (router, controller, config) => {
                     success: true
                 })    
             }).catch(function(err){
+                console.log("Route ERROR");
                 err.result = `Unable to add game ${gameparams.name}`;
                 next(err);
             })
         });
      //specific game routes
      router.param('gameId', function(req, res, next){
-         contoller.Game.get(req.params.gameId)
+         controller.Game.get(req.params.gameId)
          .then(function(game){
              req.game = game;
              next();

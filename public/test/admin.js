@@ -15,13 +15,15 @@ var admin = new Vue({
             gameScores: null,
             captures: null
         },
-        apiData: null
+        apidata: null,
+        showError: false
     },
     computed:{
-        isLoaded: function(){return (this.view == "score" || this.view == "captures") ? true:false;},
+        isLoaded: function(){return (this.view == "score" || this.view == "captures" || this.view == "games") ? true:false;},
         isGames: function(){return this.view == "games" ? true:false;},
         doneLoading: function(){return !(this.loading);},
-        loadTime: function(){return (this.loadfinish) - this.loadstart;}
+        loadTime: function(){return (this.loadfinish) - this.loadstart;},
+        apiaxios: () => {return this.apiAxios}
     },
     created: function(){
         var vm = this;
@@ -32,50 +34,25 @@ var admin = new Vue({
         })
     },
     methods: {
-        apiRequest: function(target,method,callback,body){
-            //set "View Model" (vm) as our parent app, allows xmlhttp functions to change our app variables
-            var vm = this;
-            //set a debug callback if one isn't specified
-            callback = callback || function(response){
-                vm.result = response;
-            }
-            if (method.toLowerCase() == "post"){}
-            //send our webrequest and run the callback on success
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    callback(this.responseText);
-                }
-                vm.loadfinish = performance.now();
-                vm.loading = false;
-                
-            };
-            xmlhttp.open(method.toUpperCase(), target, true);
-            if (method.toLowerCase() == "post"){xmlhttp.setRequestHeader('Content-Type','application/json; charset=utf-8');}
-            if (body == null){
-                xmlhttp.send();
-            }
-            else{
-                body = JSON.stringify(body);
-                xmlhttp.send(body);
-            }
-            this.loadstart = performance.now();
-            this.loading = true;
-        },
         apiAxios: function(target,method,callback,data){
             this.loadstart = performance.now();
             this.http({
                 method: method,
                 url: target,
                 data: data
-            }).then(callback);
+            }).then(callback)
+            .catch((error) => {
+                this.showError = true;
+                this.result = error.response.data
+                console.log(error.response);
+            });
         },
         getScore: function(){
             vm = this;
             target = this.apiurl + "/score";
             method = "GET";
             callback = function(response){
-                vm.apiData = response.data;
+                vm.apidata = response.data;
                 //vm.score = response.data;
                 vm.result = response;
                 vm.view = "score";
@@ -87,17 +64,18 @@ var admin = new Vue({
             target = this.apiurl + "/captures";
             method = "Get";
             callback = (response) =>{
-                vm.apiData = response.data;
+                vm.apidata = response.data;
                 vm.result = response;
                 vm.view = "captures";
             }
             this.apiAxios(target,method,callback);
         },
         getGames: function(){
+            vm = this;
             target = this.apiurl + "/games";
             method = "Get";
             callback = (response)=>{
-                vm.apiData = response.data;
+                vm.apidata = response.data;
                 vm.result = response;
                 vm.view = "games";
             }
@@ -113,4 +91,37 @@ var admin = new Vue({
             this.apiAxios(target,method,callback,body);
         }
     }
-})
+});
+Vue.component('modal', {
+    template: `
+    <transition name="modal">
+      <div class="modal-mask">
+        <div class="modal-wrapper">
+          <div class="modal-container">
+  
+            <div class="modal-header">
+              <slot name="header">
+                default header
+              </slot>
+            </div>
+  
+            <div class="modal-body">
+              <slot name="body">
+                default body
+              </slot>
+            </div>
+  
+            <div class="modal-footer">
+              <slot name="footer">
+                default footer
+                <button class="modal-default-button" @click="$emit('close')">
+                  OK
+                </button>
+              </slot>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
+    `
+  })

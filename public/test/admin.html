@@ -6,13 +6,12 @@
 
   <!-- CSS -->
     <link rel="stylesheet" href="admin.css">
-    <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css">
 </head>
 <body>
     <div id="admin">
-      <p>loading: {{loading}} || view: {{view}}  || LoadTime: <span v-show="doneLoading">{{loadTime}}</span></p>
+      <p>loading: {{loading}} || view: {{view}} || LoadTime: <span v-show="doneLoading">{{loadTime}}</span></p>
       <div class="controls">
-          <p><flat-pickr v-model="date" :config="dateconfig"></flat-pickr></p>
         <button v-on:click="getScore">getScore</button>
         <button v-on:click="getCaptures">getCaptures</button>
         <button v-on:click="getGames">getGames</button>
@@ -21,21 +20,33 @@
       <hr>
       <div class="view" v-if="isLoaded">
         <keep-alive>
-          <component :is="view" :data="apiData"></component>
+          <component :is="view" :apidata="apidata" :apiaxios="apiaxios"></component>
         </keep-alive>
       </div>
         <h2>Results</h2>
         <p>{{result}}</p>
     </div>
+    <modal></modal>
+    <modal v-if="showError" @close="showError = false">
+      
+      <!--
+        you can use custom content here to overwrite
+        default content
+      -->
+      <h3 slot="header">Error</h3>
+    </modal>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.13/moment-timezone.min.js"></script>
   <script src="../scripts/vue/vue.js"></script>
-  <script src="https://unpkg.com/flatpickr"></script>
-  <script src="https://unpkg.com/vue-flatpickr-component"></script>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="../scripts/axios/axios.js"></script>
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="https://unpkg.com/element-ui/lib/umd/locale/en.js"></script>
   <script>
-      Vue.component('flat-pickr',VueFlatpickr.default);
+    ELEMENT.locale(ELEMENT.lang.en)
   </script>
   <script src="score.js"></script>
   <script src="captures.js"></script>
+  <script src="games.js"></script>
   <script src="admin.js"></script>
 </body>
 </html>

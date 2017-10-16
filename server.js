@@ -26,6 +26,7 @@ app.use((req, res, next) => {
 
 //Setup hosting of our front end script files
 app.use('/scripts/vue', express.static('node_modules/vue/dist'));
+app.use('/scripts/axios', express.static('node_modules/axios/dist'));
 //Setup hosting of static files located in the public folder
 app.use(express.static('public'));
 
@@ -33,6 +34,7 @@ app.use(express.static('public'));
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Methods",'POST, PATCH, GET, OPTIONS, DELETE, PUT')
   next();
 });
 
@@ -57,8 +59,7 @@ router.use(function(req, res, next) {
 //Load all our routes, it expects: router, models, config
 require('./app/routes')(router,models,config,controller);
 
-//Load client routes with mac logging arp lookups
-//Good luck debugging
+//Load client routes 
 require('./app/clientroutes')(router,controller,config);
 
 // Register the capturepoint api routes to /capturepointapi
@@ -66,7 +67,19 @@ app.use('/capturepointapi', router);
 
 //Error handler defined last
 app.use(function(err, req, res, next){
-    res.status(err.statuscode || 500);
+    let status;
+    switch (err.code){
+        case "ECONFLICT":
+            status = 400;
+            break;
+        case "EINVALIDPARAM":
+            status = 400;
+            break;
+        default:
+            status = 500;
+            break;
+    }
+    res.status(status);
     console.log(err);
     res.json({
         result: err.result,
@@ -81,7 +94,7 @@ var options = {
     force: false
 }
 models.sequelize.sync(options).then(function(){
-    app.listen(port);
+    app.listen(port,'127.0.0.1');
 });
 console.log('Listening on: ' + port);
 //gpio.start();

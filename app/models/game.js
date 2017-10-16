@@ -29,7 +29,12 @@ module.exports = function(sequelize, DataTypes){
             return Game.findOne({
                 where: {
                     start: {$lt: now},
-                    end: {$gt: now}
+                    end: {
+                        $or: [
+                            {$gt: now},
+                            null
+                        ]
+                    }
                 },
                 order: [ ['start', 'DESC'] ]
             })

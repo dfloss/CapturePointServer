@@ -2,7 +2,7 @@ Vue.component('team-score',{
     name: 'team-score',
     props: ['teamscore','grandTotal'],
     computed: {
-        percentage: function(){
+        percentage: () =>{
             return (this.teamscore.score / this.grandTotal).toFixed(2) * 100
         }
     },
@@ -18,16 +18,16 @@ Vue.component('team-score',{
 
 Vue.component('score',{
             name: "score",
-            props: ['data'],
+            props: ['apidata','apiaxios'],
             template: `
                 <div class="score">
                 <h2>Total Score</h2>
                     <div class="totalscore">
-                        <team-score v-for="teamscore of data.totalScores" :key="teamscore" v-bind:teamscore="teamscore" v-bind:grandTotal="data.grandTotal"></team-score>
+                        <team-score v-for="teamscore of apidata.totalScores" :key="teamscore" v-bind:teamscore="teamscore" v-bind:grandTotal="apidata.grandTotal"></team-score>
                     </div>
                 <h2>Game Scores</h2>
                     <div class="gamescores">
-                        <template v-for="gamescore of data.gameScores">
+                        <template v-for="gamescore of apidata.gameScores">
                         <p>{{gamescore.game}}</p>
                         <team-score v-for="teamscore of gamescore.scores" :key="teamscore" v-bind:teamscore="teamscore" v-bind:grandTotal="gamescore.total"></team-score>
                         </template>

@@ -9,7 +9,7 @@ Vue.component('capture',{
 })
 Vue.component('captures',{
   name: 'captures',
-  props: ['data'],
+  props: ['apidata'],
   template: `
     <div class="captures">
         <table>
@@ -21,7 +21,7 @@ Vue.component('captures',{
             </tr>
           </thead>
           <tbody>
-          <capture v-for="capture of data" :key="capture" v-bind:capture="capture"></capture>
+          <capture v-for="capture of apidata" :key="capture" v-bind:capture="capture"></capture>
           </tbody>
         </table>
     </div>

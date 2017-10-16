@@ -36,7 +36,8 @@ module.exports = function(models, config){
                 return models.Game.getNext().then((nextGame)=>{
                     return {
                         message: "No games occuring", //whatever we want if there is no game
-                        values: values,
+                        currentCapture: null,
+                        currentGame: null,
                         nextGame: nextGame,
                         date: new Date()
                     }
@@ -46,6 +47,7 @@ module.exports = function(models, config){
             // return the currentGame's settings as the latest capture
             else if(currentCapture == null || currentCapture.time < currentGame.start){
                 status = {
+                    message: `Game: ${currentGame.name}`,
                     currentCapture: {
                         time: currentGame.start,
                         teamId: currentGame.teamId
@@ -56,6 +58,7 @@ module.exports = function(models, config){
             //all other circumstances should result in directly returning game and capture
             else{
                 status = {
+                    message: `Game: ${currentGame.name}`,
                     currentCapture: currentCapture,
                     currentGame: currentGame
                 }
