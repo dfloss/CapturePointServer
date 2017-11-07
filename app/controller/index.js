@@ -16,7 +16,7 @@ module.exports = function(models, config){
         //controller variables
         timeSet: config.timeSet,
         isCapturing: false,
-        capturingTeamId: null,
+        capturingTeam: null,
         capturingTimer: null,
         //controller functions
     }
@@ -52,7 +52,8 @@ module.exports = function(models, config){
                         time: currentGame.start,
                         teamId: currentGame.teamId
                     },
-                    currentGame: currentGame
+                    currentGame: currentGame,
+                    date: new Date()
                 }
             }
             //all other circumstances should result in directly returning game and capture
@@ -60,11 +61,12 @@ module.exports = function(models, config){
                 status = {
                     message: `Game: ${currentGame.name}`,
                     currentCapture: currentCapture,
-                    currentGame: currentGame
+                    currentGame: currentGame,
+                    date: new Date()
                 }
             }
             status.isCapturing = controller.isCapturing;
-            status.capturingTeamId = controller.capturingTeamId;
+            status.capturingTeam = controller.capturingTeam;
             return status;
         });
     }
@@ -88,7 +90,7 @@ module.exports = function(models, config){
     controller.startCapturing = function(teamId){
         return controller.Team.get(teamId).then((team)=>{
             controller.isCapturing = true;
-            controller.capturingTeamId = team.id;
+            controller.capturingTeam = team;
             controller.events.emit("capturing",team);
             controller.capturingTimer = setTimeout(controller.stopCapturing,config.capturingTimeout);
         }).catch((error)=>{
@@ -99,7 +101,7 @@ module.exports = function(models, config){
     }
     controller.stopCapturing = function(){
         controller.isCapturing = false;
-        controller.capturingTeamId = null;
+        controller.capturingTeam = null;
         clearTimeout(controller.capturingTimeout);
         controller.events.emit("endCapturing");
     },

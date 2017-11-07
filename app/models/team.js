@@ -13,7 +13,10 @@ module.exports = function(sequelize, DataTypes){
         },
         simpleColor: {
             type: DataTypes.STRING,
-            defaultValue: null
+            defaultValue: null,
+            validate: {
+                isIn: [["Red","Yellow","Blue","Orange","Purple","Green"]]
+            }
         },
         webColor: {
             type: DataTypes.STRING,
