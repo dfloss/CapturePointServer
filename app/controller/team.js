@@ -34,7 +34,22 @@ module.exports = function (events, models, config){
         },
         get: (id)=>{
             return models.Team.findById(id);
-        }
+        },
+	getActive: ()=>{
+	    return models.Team.findAll({
+	        where: {
+		    active: true
+		},
+		order: [
+		    'id'
+		]
+	    });
+	},
+	getAll: ()=>{
+	    return models.Team.findAll({
+	        order: ['id']
+	    });
+	}
     }
     return Team;
 }

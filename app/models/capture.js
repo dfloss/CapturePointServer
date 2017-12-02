@@ -3,7 +3,7 @@ module.exports = function(sequelize, DataTypes){
     var Capture = sequelize.define('Capture',{
         time: {
             type: DataTypes.DATE,
-            DefaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+            defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
             allowNull: false
         },
         deviceId: {

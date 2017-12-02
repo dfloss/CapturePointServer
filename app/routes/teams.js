@@ -1,9 +1,9 @@
-module.exports = function(router, models, config){
+module.exports = function(router, models, config, controller){
  
  //Router for teams collection 
     router.route("/teams")
         .get(function(req, res, next){
-            models.Team.findAll().then(function(teams){
+            controller.Team.getAll().then(function(teams){
                 res.json(teams);
             })
         })

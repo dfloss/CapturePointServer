@@ -1,4 +1,4 @@
-module.exports = function(router, models, config){
+module.exports = function(router, models, config, controller){
     router.get('/', function(req, res){
         res.json({message: 'Router is working!'})
     })
@@ -18,7 +18,7 @@ module.exports = function(router, models, config){
         var gamesPromise = models.Game.findAll({
             order: [ ['start','ASC'] ]
         });
-        var teamsPromise = models.Team.findAll();
+        var teamsPromise = controller.Team.getActive();
 
         Promise.all([gamesPromise,capturesPromise,teamsPromise]).then(results => {
             games = results[0];
@@ -46,8 +46,11 @@ module.exports = function(router, models, config){
             //index addition to deal with adding "game start" captures
             var assignedIndexAdd = 0;
             games.forEach(function(game) {
-                //set our initial game conditions, last cap at start of the game
+                //set our initial game conditions, last cap at start of the game and set end to the current time if it's null
                 //also adds an assigned capture for the game start, set to persist captures
+                if (game.end == null){
+                    game.end = new Date();
+                }
                 gameScores[game.name] = {}
                 teams.forEach(function(team){
                     gameScores[game.name][team.id] = {
@@ -99,8 +102,8 @@ module.exports = function(router, models, config){
                         if (lastCapTeam != null){
                             score = capture.time - lastCapTime;
                             assignedCaptures[(i+assignedIndexAdd-1)]["duration"] = score;
-                            gameScores[game.name][capture.Team.id]["score"] = gameScores[game.name][capture.Team.id]["score"] + score;
-                            totalScores[capture.Team.id]["score"] = totalScores[capture.Team.id]["score"] + score;
+                            gameScores[game.name][lastCapTeam]["score"] = gameScores[game.name][lastCapTeam]["score"] + score;
+                            totalScores[lastCapTeam]["score"] = totalScores[lastCapTeam]["score"] + score;
                         }
                         lastCapTime = capture.time;
                         lastCapTeam = capture.Team.id;
@@ -111,8 +114,8 @@ module.exports = function(router, models, config){
                         if (lastCapTeam != null){
                             score = capture.time - lastCapTime;
                             assignedCaptures[(i+assignedIndexAdd-1)]["duration"] = score;
-                            gameScores[game.name][capture.Team.id]["score"] = gameScores[game.name][capture.Team.id]["score"] + score;
-                            totalScores[capture.Team.id]["score"] = totalScores[capture.Team.id]["score"] + score;
+                            gameScores[game.name][lastCapTeam]["score"] = gameScores[game.name][lastCapTeam]["score"] + score;
+                            totalScores[lastCapTeam]["score"] = totalScores[lastCapTeam]["score"] + score;
                         }
                         //console.log("capture past game time, moving to next game");
                         break;
@@ -121,8 +124,8 @@ module.exports = function(router, models, config){
                 if (lastCapTeam != null && assignedCaptures[(i+assignedIndexAdd-1)]["duration"] == null){
                         score = capture.time - lastCapTime;
                         assignedCaptures[(i+assignedIndexAdd-1)]["duration"] = score;
-                        gameScores[game.name][capture.Team.id]["score"] = gameScores[game.name][capture.Team.id]["score"]+ score;
-                        totalScores[capture.Team.id]["score"] = totalScores[capture.Team.id]["score"] + score;
+                        gameScores[game.name][lastCapTeam]["score"] = gameScores[game.name][lastCapTeam]["score"]+ score;
+                        totalScores[lastCapTeam]["score"] = totalScores[lastCapTeam]["score"] + score;
                     }
             },this);
 
