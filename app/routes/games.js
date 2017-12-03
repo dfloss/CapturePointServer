@@ -43,7 +43,7 @@ module.exports = (router, controller, config) => {
              });
          })
          .delete(function(req, res, next){
-             req.team.destroy().then(function(){
+             req.game.destroy().then(function(){
                  res.json({
                      message: "successfully deleted game",
                      success: true
