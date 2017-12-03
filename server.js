@@ -94,7 +94,7 @@ var options = {
     force: false
 }
 models.sequelize.sync(options).then(function(){
-    app.listen(port,'127.0.0.1');
+    app.listen(port);
 });
 console.log('Listening on: ' + port);
 //gpio.start();

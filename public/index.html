@@ -1,1 +1,52 @@
-<p>THIS IS SOME FUCKING HTML BITCH WUBALUBADUBDUB</p>
+<!DOCTYPE html>
+<html>
+   <head>
+       <title>Capturepoint</title>
+       <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+       <link rel="icon" href="./images/icon.png"/>
+       <link rel="stylesheet" type="text/css" href="index.css"/>
+       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+
+   </head>
+   <body>
+       <div id="index" v-bind:class="team">
+            <div id="header">
+                <img src="./images/logo.png"/>
+                <img id="admin" src="./images/gear.png" onclick="window.location.href='/admin/admin.html'">
+            </div>
+
+           <div id="user" class="bar"><div class="center">{{ user }}</div></div>
+            <div id="head" class="bar"><div class="center">
+                POINT CAPTURED BY {{ team }}
+            </div></div>
+
+            <div v-bind:id="team" class="banner">
+                <div id="Over">
+                    300 POINTS
+                </div>
+            </div>
+			
+            <div id="hack">
+                <div v-for="tms in teams" class="button" v-on:click="hack(tms)"><div class="center">{{ tms }}</div></div>
+            </div>
+
+
+
+            <div id="gameHolder">
+                <canvas id="game"></canvas>
+                <div id="gameDisplay"></div>
+
+            </div>
+            <canvas id="backgroundHolder"></canvas>
+
+            <link v-for="link in links" rel="stylesheet" type="text/css" v-bind:href="link"/>
+
+       </div>
+       <script src="./scripts/vue/vue.js"></script>
+       <script type="text/javascript" src="./scripts/index.js"></script>
+       <script type="text/javascript" src="./scripts/game1.js"></script>
+       <script type="text/javascript" src="./scripts/game2.js"></script>
+       <script type="text/javascript" src="./scripts/game3.js"></script>
+    </body>
+</html>
