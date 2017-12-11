@@ -8,9 +8,9 @@
   },
   "test": {
     "username": "capturepoint",
-    "password": "capture",
+    "password": "captures",
     "database": "capturepoint_test",
-    "host": "127.0.0.1",
+    "host": "capturedb",
     "dialect": "postgres"
   },
   "production": {

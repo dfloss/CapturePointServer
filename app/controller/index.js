@@ -23,8 +23,7 @@ module.exports = function(models, config){
     controller.Game = require("./game.js")(controller.events,models,config);
     controller.Team = require("./team.js")(controller.events,models,config);
     controller.Capture = require("./capture.js")(controller.events,models,config);
-    controller.getStatus = function(){
-        //replace with controller.Capture.getCurrent();
+    controller.getStatus = function(){      
         currentCaptureProm = controller.Capture.getCurrent();
         currentGameProm = controller.Game.getCurrent();
         return Promise.all([currentCaptureProm,currentGameProm]).then((values)=>{

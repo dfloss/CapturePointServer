@@ -1,3 +1,4 @@
+var { setTimeout } = require('timers');
 var env        = process.env.NODE_ENV || 'development';
 var express    = require('express');        // call express
 var app        = express();                 // define our app using express
@@ -15,7 +16,7 @@ app.use(bodyParser.json());
 
 //application level middleware
 app.use((req, res, next) => {
-    if (!(timeSet) && env != "development"){
+    if (!(timeSet) && env == "production"){
         res.sendFile('./public/init.html', {root: __dirname});
         timeSet=true;
     }
@@ -93,8 +94,38 @@ app.use(function(err, req, res, next){
 var options = {
     force: false
 }
-models.sequelize.sync(options).then(function(){
-    app.listen(port);
-});
-console.log('Listening on: ' + port);
-//gpio.start();
+function getServer(app,port,models,options){
+    var retryCount = 0
+    var start =  () =>{
+        models.sequelize.sync(options).then(()=>{
+            app.listen(port);
+        })
+        .catch((err)=>{
+            console.log("failed to start server, retrying in 5 seconds");
+            retryCount++;
+            if (retryCount <= 5){
+                setTimeout(start,5000);
+            }
+            else{
+                throw err;
+            }
+        });
+        console.log('Listening on: ' + port);
+    }
+    return start;
+}
+console.log(process.env.NODE_ENV);
+var startServer = getServer(app,port,models,options);
+startServer();
+/*
+var start = function (callback){
+    models.sequelize.sync(options).then(function(){
+        app.listen(port);
+    })
+    .catch(()=>{
+        console.log("Failed to start server, retrying in 5 seconds")
+        setTimeout(callback,5000)
+    });
+    console.log('Listening on: ' + port);
+}*/
+

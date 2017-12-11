@@ -1,0 +1,4 @@
+command:
+sudo iw dev wlan0 set txpower limit <amount>
+
+const { exec } = require("child_process")

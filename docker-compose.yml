@@ -1,0 +1,16 @@
+version: '3'
+services:
+        server:
+                build: .
+                ports:
+                - "8080:8080"
+                environment:
+                - NODE_ENV=test
+                depends_on: 
+                - "capturedb"
+        capturedb:
+                image: "postgres"
+                environment:
+                - POSTGRES_DB=capturepoint_test
+                - POSTGRES_USER=capturepoint
+                - POSTGRES_PASSWORD=captures
