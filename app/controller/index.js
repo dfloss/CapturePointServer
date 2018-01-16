@@ -37,6 +37,7 @@ module.exports = function(models, config){
                         message: "No games occuring", //whatever we want if there is no game
                         currentCapture: null,
                         currentGame: null,
+                        controllingTeam: null,
                         nextGame: nextGame,
                         date: new Date()
                     }
@@ -51,6 +52,7 @@ module.exports = function(models, config){
                         time: currentGame.start,
                         teamId: currentGame.teamId
                     },
+                    controllingTeam: currentGame.Team,
                     currentGame: currentGame,
                     date: new Date()
                 }
@@ -61,6 +63,7 @@ module.exports = function(models, config){
                     message: `Game: ${currentGame.name}`,
                     currentCapture: currentCapture,
                     currentGame: currentGame,
+                    controllingTeam: currentCapture.Team,
                     date: new Date()
                 }
             }

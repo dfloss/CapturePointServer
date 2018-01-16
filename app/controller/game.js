@@ -60,7 +60,20 @@ module.exports = function (events, models, config){
             return models.Game.findAll();
         },
         getCurrent: () =>{
-            return models.Game.getCurrent();
+            var now = new Date();
+            return models.Game.findOne({
+                include: [models.Team],
+                where: {
+                    start: {$lt: now},
+                    end: {
+                        $or: [
+                            {$gt: now},
+                            null
+                        ]
+                    }
+                },
+                order: [ ['start', 'DESC'] ]
+            });
         }
     }
     return Game

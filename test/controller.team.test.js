@@ -55,7 +55,7 @@ describe("Team modification",function(){
         });
         
     });
-    it("Returns Validation erros for simpleColor",()=>{
+    it("Returns Validation errors for simpleColor",()=>{
         var team = {
             id: 1,
             name: "HappyPathers",
@@ -72,7 +72,7 @@ describe("Team modification",function(){
             assert(testError.param == "simpleColor");
         });
     });
-    it("Returns Validation erros for simpleColor",()=>{
+    it("Returns Validation erros for webColor",()=>{
         var team = {
             id: 1,
             name: "HappyPathers",

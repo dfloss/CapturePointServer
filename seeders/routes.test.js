@@ -54,7 +54,7 @@ teams = [
     {
         name: "team1",
         simpleColor: "Green",
-        webColor: 'm4a5444'
+        webColor: '4a5444'
     },
     {
         name: "team2",

@@ -8,7 +8,7 @@
   },
   "test": {
     "username": "capturepoint",
-    "password": "captures",
+    "password": "capture",
     "database": "capturepoint_test",
     "host": "capturedb",
     "dialect": "postgres"

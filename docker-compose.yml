@@ -13,4 +13,6 @@ services:
                 environment:
                 - POSTGRES_DB=capturepoint_test
                 - POSTGRES_USER=capturepoint
-                - POSTGRES_PASSWORD=captures
+                - POSTGRES_PASSWORD=capture
+                ports:
+                - "5432:5432"

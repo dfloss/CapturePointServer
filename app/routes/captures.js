@@ -1,12 +1,12 @@
 module.exports = function(router, models, config){
     
     router.route("/captures")
-        .get(function(req, res){
+        .get(function(req, res, next){
             models.Capture.findAll().then(captures =>{
                 res.json(captures);
             });
         })
-        .post(function(req, res){
+        .post(function(req, res, next){
             models.Capture.create(req.body)
             .then(value => {
                 res.json({
@@ -29,7 +29,7 @@ module.exports = function(router, models, config){
         .patch(function(req, res){
             
         })
-        .delete(function(req, res){
+        .delete(function(req, res, next){
             req.capture.delete().then(function(){
                 res.json({
                     message: "capture deleted",
@@ -37,7 +37,7 @@ module.exports = function(router, models, config){
                 })
             })
         })
-        .put(function(req, res){
+        .put(function(req, res, next){
             
         });
 }
