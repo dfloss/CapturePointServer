@@ -35,9 +35,20 @@ module.exports = function(models, config){
                 return models.Game.getNext().then((nextGame)=>{
                     return {
                         message: "No games occuring", //whatever we want if there is no game
-                        currentCapture: null,
-                        currentGame: null,
-                        controllingTeam: null,
+                        currentCapture: {
+                            time: null
+                        },
+                        currentGame: {
+                            name: null,
+                            start: null,
+                            end: null
+                        },
+                        controllingTeam: {
+                            name: null,
+                            simpleColor: null,
+                            webColor: null,
+                            active: false
+                        },
                         nextGame: nextGame,
                         date: new Date()
                     }
