@@ -1,5 +1,4 @@
 //Seeder for testing a single day, 2 team game with 10 random captures
-
 var models = require('../app/models');
 var config = require('../config/config.json');
 var controller = require('../app/controller');
@@ -46,18 +45,44 @@ game = {
 }
 
 
-//Setup two teams
+//Setup teams
 teams = [
     {
         name: "team1",
-        simpleColor: "Green",
-        webColor: 'm4a5444'
+        simpleColor: 'Green',
+        webColor: '00ff00',
+        active: true
     },
     {
         name: "team2",
-        simpleColor: "Orange",
-        webColor: 'b49d80'
-    }
+        simpleColor: 'Orange',
+        webColor: 'd2b48c',
+        active: true
+    },
+    {
+        name: "team3",
+        simpleColor: 'Red',
+        webColor: 'ff0000',
+        active: false
+    },
+    {
+        name: "team4",
+        simpleColor: 'Blue',
+        webColor: '0000ff',
+        active: false
+    },
+    {
+        name: "team5",
+        simpleColor: 'Yellow',
+        webColor: 'ffff00',
+        active: false
+    },
+    {
+        name: "team6",
+        simpleColor: 'Purple',
+        webColor: '800080',
+        active: false
+    },
 ]
 
 //Generate 10 capture times, start at game start

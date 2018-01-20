@@ -143,7 +143,7 @@ describe("Game info retrieving",function(){
     it("Can get the current game",function(){
         var mocks = getMocks();
         mocks.controller.Game.getCurrent();
-        assert(mocks.getCurrentStub.called);
+        assert(mocks.findOneStub.called);
     });
 });
 describe("Game modification",function(){

@@ -12,6 +12,7 @@ module.exports = function(models, config){
         events: events,
         Game: require("./game.js")(events,models,config),
         Team: require("./team.js")(events,models,config),
+        Seeders: require('./seeders.js')(events,models,config),
         //Capture: require("./capture.js")(events,models,config),
         //controller variables
         timeSet: config.timeSet,
