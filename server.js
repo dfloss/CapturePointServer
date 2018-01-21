@@ -91,8 +91,11 @@ app.use(function(err, req, res, next){
 })
 
 //Setup the connection to the database then start the server
+let force
+if (process.env.NODE_ENV_FORCE == 'true'){force = true}
+else {force = false}
 var options = {
-    force: false
+    force: force
 }
 function getServer(app,port,models,options){
     var retryCount = 0
