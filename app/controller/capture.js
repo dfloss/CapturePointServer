@@ -1,8 +1,23 @@
 module.exports = function (events, models, config){
     var Capture = {
         create: (capture) =>{
-            events.emit
+            events.emit('capture',capture);
             return models.Capture.create(capture);
+        },
+        get: (id) =>{
+            return models.Capture.findOne({
+                where: {
+                    id: id
+                }
+            });
+        },
+        getAll: ()=>{
+            return models.Capture.findAll();
+        },
+        getAllTeam: ()=>{
+            return models.Capture.findAll({
+                include: [{model: models.Team, attributes: ['name','webColor']}]
+            });
         },
         getCurrent: ()=>{
             return models.Capture.findOne({

@@ -1,10 +1,17 @@
-module.exports = function(router, models, config){
+module.exports = function(router, controller, models, config){
     
     router.route("/captures")
         .get(function(req, res, next){
-            models.Capture.findAll().then(captures =>{
-                res.json(captures);
-            });
+            if (req.query.view == "team"){
+                controller.Capture.getAllTeam().then((captures)=>{
+                    res.json(captures);
+                })
+            }
+            else{
+                models.Capture.findAll().then(captures =>{
+                    res.json(captures);
+                });
+            }
         })
         .post(function(req, res, next){
             models.Capture.create(req.body)
