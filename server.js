@@ -8,7 +8,7 @@ var config = require('./config/config.json')[env];
 var arp = require('node-arp');
 //var gpio = require('./app/gpio/hardware.js');
 var controller= require('./app/controller')(models,config);
-var hardware = require('./app/gpio')(controller,models);
+var hardware = require('./app/gpio')(controller,config);
 // configure app to use bodyParser, This could be a performance hit when hosting static files
     //might look to move it to  the router level
 app.use(bodyParser.urlencoded({ extended: true }));

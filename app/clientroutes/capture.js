@@ -27,7 +27,7 @@ module.exports = function(router, controller, config){
     //route for stopping capture attemps
       //will need some kind of validation but skipping it for proof of concept
     router.post('/stopcapturing',(req, res, next)=>{
-        contoller.stopCapturing().then(()=>{
+        controller.stopCapturing().then(()=>{
             res.json({
                 success: true
             });
@@ -39,7 +39,7 @@ module.exports = function(router, controller, config){
     //route for stopping capture attemps
       //will need some kind of validation but skipping it for proof of concept
     router.post('/continuecapturing',(req, res, next)=>{
-        contoller.stopCapturing().then(()=>{
+        contoller.continueCapturing().then(()=>{
             res.json({
                 success: true
             });

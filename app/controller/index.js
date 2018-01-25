@@ -51,7 +51,9 @@ module.exports = function(models, config){
                             active: false
                         },
                         nextGame: nextGame,
-                        date: new Date()
+                        date: new Date(),
+                        isCapturing: controller.isCapturing,
+                        capturingTeam: controller.capturingTeam
                     }
                 });
             }
@@ -101,11 +103,19 @@ module.exports = function(models, config){
         });
     }
     //capturing block... maybe make it it's own controller or put it in Capture
+    controller.stopCapturing = function(){
+        controller.isCapturing = false;
+        controller.capturingTeam = null;
+        clearTimeout(controller.capturingTimeout);
+        controller.events.emit("stopCapturing");
+        //return a promise to match other functions
+        return Promise.resolve(null);
+    }
     controller.startCapturing = function(teamId){
         return controller.Team.get(teamId).then((team)=>{
             controller.isCapturing = true;
             controller.capturingTeam = team;
-            controller.events.emit("capturing",team);
+            controller.events.emit("startCapturing",team);
             controller.capturingTimer = setTimeout(controller.stopCapturing,config.capturingTimeout);
         }).catch((error)=>{
             var error = new Error(`invalid team id ${teamId}`);
@@ -113,15 +123,11 @@ module.exports = function(models, config){
             return Promise.reject(error);
         });
     }
-    controller.stopCapturing = function(){
-        controller.isCapturing = false;
-        controller.capturingTeam = null;
-        clearTimeout(controller.capturingTimeout);
-        controller.events.emit("endCapturing");
-    },
     controller.continueCapturing = function(){
         clearTimeout(controller.capturingTimeout);
         controller.capturingTimer = setTimeout(controller.stopCapturing,config.capturingTimeout);
+        //return a promise to match other functions
+        return Promise.resolve(null);
     }
     controller.capture =  function(TeamId,deviceId){
             return controller.Team.get(TeamId).then((team)=>{
