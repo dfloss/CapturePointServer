@@ -142,7 +142,7 @@ module.exports = function(models, config){
                 });
             }).catch((error)=>{
                 var error = new Error(`invalid team id ${TeamId}`);
-                erorr.code = "ENOTFOUND";
+                error.code = "ENOTFOUND";
                 return Promise.reject(error);
             });
     }

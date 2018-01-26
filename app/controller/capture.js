@@ -1,7 +1,7 @@
 module.exports = function (events, models, config){
     var Capture = {
         create: (capture) =>{
-            events.emit('capture',capture);
+//            events.emit('capture',capture);
             return models.Capture.create(capture);
         },
         get: (id) =>{
