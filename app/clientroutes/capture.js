@@ -2,7 +2,7 @@ module.exports = function(router, controller, config){
     //route for client sending a successful capture
     router.post('/capture', (req, res, next)=>{
         controller.getDeviceId(req).then((deviceId)=>{
-            controller.capture(req.body.teamId,deviceId).then(()=>{
+            controller.capture(req.body.TeamId,deviceId).then(()=>{
                 res.json({
                     success: true
                 })

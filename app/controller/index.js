@@ -129,7 +129,7 @@ module.exports = function(models, config){
         //return a promise to match other functions
         return Promise.resolve(null);
     }
-    controller.capture =  function(TeamId,deviceId){
+    controller.capture = function(TeamId,deviceId){
             return controller.Team.get(TeamId).then((team)=>{
                 capture = {
                     time: new Date(),
@@ -141,7 +141,7 @@ module.exports = function(models, config){
                     controller.events.emit("capture",{team: team,deviceId: deviceId});
                 });
             }).catch((error)=>{
-                var error = new Error(`invalid team id ${teamId}`);
+                var error = new Error(`invalid team id ${TeamId}`);
                 erorr.code = "ENOTFOUND";
                 return Promise.reject(error);
             });
