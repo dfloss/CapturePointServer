@@ -7,6 +7,7 @@ module.exports = function(models, config){
     const eventClass = require('events');
     class Events extends eventClass {}
     const events = new Events();
+    var eventCounter = 0;
     var controller = {
         //model controllers
         events: events,

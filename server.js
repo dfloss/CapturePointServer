@@ -102,6 +102,7 @@ function getServer(app,port,models,options){
     var start =  () =>{
         models.sequelize.sync(options).then(()=>{
             app.listen(port);
+            controller.events.emit('boot');
         })
         .catch((err)=>{
             console.log("failed to start server, retrying in 5 seconds");

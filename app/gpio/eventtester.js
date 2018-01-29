@@ -11,7 +11,7 @@ module.exports = (controller, config)=>{
     });
     controller.events.on("stopCapturing",(input)=>{
         //console.log(`capture event with data: ${JSON.stringify(input)}`)
-        console.log(`capture event with data:`);
+        console.log(`stopCapture event with data:`);
         console.log(input);
     });
     controller.events.on("boot", function(data){

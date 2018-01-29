@@ -3,9 +3,19 @@ module.exports = function(router, models, config, controller){
  //Router for teams collection 
     router.route("/teams")
         .get(function(req, res, next){
-            controller.Team.getAll().then(function(teams){
+            var returnPromise;
+            switch (req.query.view){
+                case "active":
+                    returnPromise = controller.Team.getActive();
+                break;
+                default:
+                    returnPromise = controller.Team.getAll();
+            }
+            returnPromise.then((teams) => {
                 res.json(teams);
-            })
+            }).catch((err)=>{
+                next(err);
+            });
         })
         .post(function(req, res, next){
             teamparams = req.body;

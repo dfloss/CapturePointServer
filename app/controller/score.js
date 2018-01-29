@@ -1,5 +1,5 @@
 module.exports = function (events, models, config){
-    function scoreCalculator(initTeam,initTime){
+    function getScoreCalculator(initTeam,initTime){
         var oldTeam = initTeam;
         var oldTime = initTime;
         return (team,time) => {
@@ -8,7 +8,8 @@ module.exports = function (events, models, config){
                 score: score,
                 team: oldTeam
             }
-            oldTeam = team
+            oldTeam = team;
+            oldTime = time;
             return returnObject;
         }
     }
