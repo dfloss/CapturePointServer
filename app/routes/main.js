@@ -9,7 +9,13 @@ module.exports = function(router, models, config, controller){
             object: object
         });
     })
-    //score calculator
+    router.get('/score',(req, res, next)=>{
+        controller.Score.getScore().then((score)=>{
+            res.json(score);
+        })
+    })
+    //LEGACY score calculator
+    /*
     router.get('/score', function(req, res){
         var capturesPromise = models.Capture.findAll({
             include: [models.Team],
@@ -162,4 +168,5 @@ module.exports = function(router, models, config, controller){
             res.json(result);
         }).catch(function(err){console.log(err);});
     });
+    */
 }
