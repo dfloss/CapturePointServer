@@ -45,7 +45,7 @@ describe("Team modification",function(){
             id: 1,
             name: "HappyPathers",
             simpleColor: "Green",
-            webColor: "FFFFFF",
+            webColor: "#FFFFFF",
             active: true
         }
         return mocks.controller.Team.update(team).then(()=>{
@@ -60,7 +60,7 @@ describe("Team modification",function(){
             id: 1,
             name: "HappyPathers",
             simpleColor: "Nope",
-            webColor: "FFFFFF",
+            webColor: "#FFFFFF",
             active: true
         }
         var testError;
@@ -72,7 +72,7 @@ describe("Team modification",function(){
             assert(testError.param == "simpleColor");
         });
     });
-    it("Returns Validation erros for webColor",()=>{
+    it("Returns Validation errors for webColor",()=>{
         var team = {
             id: 1,
             name: "HappyPathers",

@@ -3,37 +3,37 @@ module.exports = function (events, models, config){
         {
             name: "team1",
             simpleColor: 'Green',
-            webColor: '00ff00',
+            webColor: '#00ff00',
             active: true
         },
         {
             name: "team2",
             simpleColor: 'Orange',
-            webColor: 'd2b48c',
+            webColor: '#d2b48c',
             active: true
         },
         {
             name: "team3",
             simpleColor: 'Red',
-            webColor: 'ff0000',
+            webColor: '#ff0000',
             active: false
         },
         {
             name: "team4",
             simpleColor: 'Blue',
-            webColor: '0000ff',
+            webColor: '#0000ff',
             active: false
         },
         {
             name: "team5",
             simpleColor: 'Yellow',
-            webColor: 'ffff00',
+            webColor: '#ffff00',
             active: false
         },
         {
             name: "team6",
             simpleColor: 'Purple',
-            webColor: '800080',
+            webColor: '#800080',
             active: false
         },
     ];

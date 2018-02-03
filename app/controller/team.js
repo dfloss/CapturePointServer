@@ -1,8 +1,9 @@
 module.exports = function (events, models, config){
     var Team = {
+        //TODO: Return all errors instead of first error
         validate: (team)=>{
             var simpleColorSet = ["Red","Yellow","Blue","Orange","Purple","Green"]
-            var webColorFilter = '^[0-9A-F]{6}$'
+            var webColorFilter = '^#[0-9A-F]{6}$'
             if (team.webColor){
                 if(!(team.webColor.match(webColorFilter))){
                     var error = new Error(`Invalid Parameter for webColor ${team.webColor}`);
